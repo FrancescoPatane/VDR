@@ -5,15 +5,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-@EnableWebMvc
-public class MvcConfig implements WebMvcConfigurer {
+//@Configuration
+//@EnableWebMvc
+public class MvcConfig /*implements WebMvcConfigurer*/ {
 	
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry
-	      .addResourceHandler("/images/**")
-	      .addResourceLocations("file:///C:/springboot/vdr/images/");
-	 }
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//	    registry
+//	      .addResourceHandler("/images/**")
+//	      .addResourceLocations("file:///C:/springboot/vdr/images/");
+//	    //registry.addResourceHandler("/css/**").addResourceLocations("/resources/static/css/");
+//	 }
 	
 }

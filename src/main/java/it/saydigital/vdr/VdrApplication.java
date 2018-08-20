@@ -10,13 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VdrApplication {
 
 	public static void main(String[] args) {
-		File file = new File("image.jpg");
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		SpringApplication.run(VdrApplication.class, args);
 	}
 }

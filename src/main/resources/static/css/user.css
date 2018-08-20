@@ -1,0 +1,16 @@
+body{
+	margin-top: 70px;
+}
+
+section{
+	background: url(../img/architecture.jpg) no-repeat center center scroll;
+	top:0px;
+    left:0px;
+    right:0px;
+    height: 250px;
+    position: absolute;
+}
+
+h1{
+	padding-top: 90px;
+}
