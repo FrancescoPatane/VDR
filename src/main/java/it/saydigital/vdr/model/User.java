@@ -1,6 +1,8 @@
 package it.saydigital.vdr.model;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,8 @@ public class User {
     private String password;
     private boolean enabled;
     private boolean tokenExpired;
+    @ManyToMany(mappedBy = "users")
+    private Set<MarketingEntity> mktEntities = new HashSet<>();
  
     @ManyToMany
     @JoinTable( 
@@ -98,6 +102,14 @@ public class User {
 
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Set<MarketingEntity> getMktEntities() {
+		return mktEntities;
+	}
+
+	public void setMktEntities(Set<MarketingEntity> mktEntities) {
+		this.mktEntities = mktEntities;
 	}
     
     
