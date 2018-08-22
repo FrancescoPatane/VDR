@@ -16,34 +16,51 @@
 <body>
 
 
-<div th:replace="fragments/navbar :: navbar">...</div>
+	<div th:replace="fragments/navbar :: navbar">...</div>
 
 
-<section>
-<h1 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]!</h1>
-</section>
+	<section>
+		<h1 th:inline="text">Welcome
+			[[${#httpServletRequest.remoteUser}]]!</h1>
+	</section>
+
+	<br>
+
+	<div class="listContainer">
+
+
+
+		<div class="row" th:each="entity : ${entities}">
+<!-- <th th:each="family : ${families}"> -->
+			<div class="col"><img th:src="@{/img/defaultcover.png}" height="80" width="100"></img></div>
+			<div class="col-4"><p th:text="${entity.name}"></p></div>
+			<div class="col"></div>
+			<div class="col"><img th:src="@{${entity.getCoverImageName()}}" height="80" width="100"></img></div>
+
+		</div>
+
+	</div>
+	
 
 
 
 
+	<!-- <div class="container"> -->
 
+	<!--     <div class="starter-template"> -->
+	<!--         <h1>User page (Spring Security protected)</h1> -->
 
-<!-- <div class="container"> -->
+	<!--         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1> -->
+	<!--         <form th:action="@{/logout}" method="post"> -->
+	<!--             <input type="submit" value="Sign Out"/> -->
+	<!--         </form> -->
 
-<!--     <div class="starter-template"> -->
-<!--         <h1>User page (Spring Security protected)</h1> -->
+	<!--     </div> -->
 
-<!--         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1> -->
-<!--         <form th:action="@{/logout}" method="post"> -->
-<!--             <input type="submit" value="Sign Out"/> -->
-<!--         </form> -->
-
-<!--     </div> -->
-    
-    <img th:src="@{/image.jpg}"></img>
-<!-- sss -->
-<!-- </div> -->
-<!-- /.container -->
+	<!--     <img th:src="@{/image.jpg}"></img> -->
+	<!-- sss -->
+	<!-- </div> -->
+	<!-- /.container -->
 
 	<div th:replace="fragments/footer :: footer"></div>
 

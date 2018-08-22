@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
@@ -17,10 +19,15 @@ public class MarketingEntity {
     private String name;
     private String description;
     private String transactionManager;
+    private String company;
     private String tmEmail;
     private Boolean isLocked;
-    private String coverImage;
     @ManyToMany
+    @JoinTable( 
+        joinColumns = @JoinColumn(
+          name = "mkt_entity_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "id")) 
     private Set<User> users = new HashSet<>();
     
     
@@ -63,19 +70,26 @@ public class MarketingEntity {
 	public void setIsLocked(Boolean isLocked) {
 		this.isLocked = isLocked;
 	}
-	public String getCoverImage() {
-		return coverImage;
-	}
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
+
 	public Set<User> getUsers() {
 		return users;
 	}
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
     
+	public String getCoverImageName () {
+		if (this.company != null && this.company.length()>0)
+			return "/icons/"+this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();
+		else
+			return "/img/defaultcover.png";
+	}
     
 
 }

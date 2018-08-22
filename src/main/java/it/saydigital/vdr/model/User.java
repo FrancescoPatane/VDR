@@ -1,9 +1,13 @@
 package it.saydigital.vdr.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import it.saydigital.vdr.model.comparator.MarketingEntityComparator;
 
 @Entity
 @Table(name = "user_")
@@ -24,7 +31,10 @@ public class User {
  
     private String firstName;
     private String lastName;
+    @Column(unique=true)
+    @NotNull
     private String email;
+    @NotNull
     private String password;
     private boolean enabled;
     private boolean tokenExpired;
@@ -112,6 +122,11 @@ public class User {
 		this.mktEntities = mktEntities;
 	}
     
+	public List<MarketingEntity> getMktEntitiesOrdered() {
+		List<MarketingEntity> entities = new ArrayList<>(this.mktEntities);
+		Collections.sort(entities, new MarketingEntityComparator());
+		return entities;
+	}
     
     
     

@@ -1,21 +1,25 @@
 package it.saydigital.vdr.controller;
 
-import java.security.Principal;
 
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import it.saydigital.vdr.model.MarketingEntity;
+import it.saydigital.vdr.model.User;
+import it.saydigital.vdr.repository.UserRepository;
 
 @Controller
 public class DefaultController {
+
 	
-	@Autowired UserDetailsService userService;
+    @Autowired
+    private UserRepository userRepository;
+    
 
     @GetMapping(value = { "/", "/home" })
     public String home() {
@@ -34,8 +38,18 @@ public class DefaultController {
     }
     
     @GetMapping("/user")
-    public String user() {
+    public String user(Model uiModel) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	User user = getUser(auth.getName());
+    	List<MarketingEntity> userEntities = user.getMktEntitiesOrdered();
+    	Collections.reverse(userEntities);
+    	uiModel.addAttribute("entities", userEntities);
         return "/user";
+    }
+    
+    
+    private User getUser (String email) {
+    	return userRepository.findByEmail(email);
     }
 
 }
