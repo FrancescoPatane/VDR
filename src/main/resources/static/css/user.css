@@ -1,6 +1,6 @@
-body{
-	margin-top: 70px;
-}
+/* body{ */
+/* 	margin-top: 70px; */
+/* } */
 
 section{
 	background: url(../img/architecture.jpg) no-repeat center center scroll;
@@ -8,7 +8,7 @@ section{
     left:0px;
     right:0px;
     height: 250px;
-    position: absolute;
+/*     position: absolute; */
 }
 
 h1{
