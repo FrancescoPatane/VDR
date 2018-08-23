@@ -19,6 +19,7 @@ public class MarketingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique=true)
     private String name;
     @Column(length = 500)
     private String description;

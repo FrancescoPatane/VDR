@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/user.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-treeview.min.css}" />
+
+
+</head>
+<body>
+
+
+	<div th:replace="fragments/navbar :: navbar">...</div>
+	
+	<br><br><br>
+	
+	<input type="hidden" id="doctree" th:value="${json}" />
+	
+	<br><br><br>
+	
+	<div id="docTree">
+	</div>
+	
+
+
+	<div th:replace="fragments/footer :: footer"></div>
+
+	
+	<script type="text/javascript" th:src="@{/js/bootstrap-treeview.min.js}"></script>
+	
+	
+<script>
+
+
+$('#docTree').treeview({
+// 	color: "#2b8835",s
+// 	electedBackColor: "#2b8835", 
+	expandIcon: 'fa fa-chevron-right',
+	collapseIcon: 'fa fa-chevron-down',
+	showTags: true,
+	levels: 0,
+// 	onNodeSelected: function(event, node) {
+// 		//$('p.to-edit').html(node.text);
+// 		$('#toEdit').html(node.text);
+// 	},
+	data: $("#doctree").val()});
+	
+	
+
+</script>	
+
+
+</body>
+
+
+
+
+</html>
