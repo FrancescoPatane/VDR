@@ -1,8 +1,10 @@
 package it.saydigital.vdr.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class MarketingEntity {
@@ -17,6 +20,7 @@ public class MarketingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(length = 500)
     private String description;
     private String transactionManager;
     private String company;
@@ -29,6 +33,8 @@ public class MarketingEntity {
         inverseJoinColumns = @JoinColumn(
           name = "user_id", referencedColumnName = "id")) 
     private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy="mktEntityId")
+    private List<Document> documents;
     
     
 	public MarketingEntity() {
@@ -83,7 +89,12 @@ public class MarketingEntity {
 	public void setCompany(String company) {
 		this.company = company;
 	}
-    
+	public List<Document> getDocuments() {
+		return documents;
+	}
+	public void setDocuments(List<Document> documents) {
+		this.documents = documents;
+	}
 	public String getCoverImageName () {
 		if (this.company != null && this.company.length()>0)
 			return "/icons/"+this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
+import it.saydigital.vdr.repository.DocumentRepository;
 import it.saydigital.vdr.repository.UserRepository;
 
 @Controller
@@ -19,6 +20,9 @@ public class DefaultController {
 	
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private DocumentRepository docRepository;
     
 
     @GetMapping(value = { "/", "/home" })
@@ -45,6 +49,12 @@ public class DefaultController {
     	Collections.reverse(userEntities);
     	uiModel.addAttribute("entities", userEntities);
         return "/user";
+    }
+    
+    @GetMapping("/detail")
+    public String entityDetails() {
+    	System.out.println(docRepository.findRootsByEntityId(1L).get(0).getName());
+        return "/detail";
     }
     
     
