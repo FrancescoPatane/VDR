@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.saydigital.vdr.model.Content;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
-import it.saydigital.vdr.repository.DocumentRepository;
+import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.tree.TreeManager;
@@ -32,7 +33,7 @@ public class DefaultController {
     private UserRepository userRepository;
     
     @Autowired
-    private DocumentRepository docRepository;
+    private ContentRepository contentRepository;
     
     @Autowired
     private MarketingEntityRepository mktRepository;
@@ -72,10 +73,8 @@ public class DefaultController {
     
     @GetMapping("/detail")
     public String entityDetails(Model uiModel, @RequestParam("entityName") String entityName) throws JsonProcessingException {
-    	Long entityId = mktRepository.findByName(entityName).getId();
-    	System.out.println(docRepository.findRootsByEntityId(entityId).get(0).getName());
-    	
-    	System.out.println(docRepository.findByFather(2l).get(0).getName());
+    	long entityId = mktRepository.findByName(entityName).getId();
+    	List<Content> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
     	
 //    	Map<String, Object> son = new HashMap<String, Object>();
 //    	son.put("text", "son");
@@ -83,7 +82,8 @@ public class DefaultController {
 //    	json.put("text", "NODO1");
 //    	json.put("nodes", son);
 //    	ObjectMapper mapper = new ObjectMapper();
-    	uiModel.addAttribute("json", treeManager.getDocTree(entityId));
+    	uiModel.addAttribute("sliderImages", sliderImages);
+    	uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
         return "/detail";
     }
     

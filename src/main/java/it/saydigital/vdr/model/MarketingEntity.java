@@ -35,7 +35,7 @@ public class MarketingEntity {
           name = "user_id", referencedColumnName = "id")) 
     private Set<User> users = new HashSet<>();
     @OneToMany(mappedBy="mktEntityId")
-    private List<Document> documents;
+    private List<Content> documents;
     
     
 	public MarketingEntity() {
@@ -90,10 +90,10 @@ public class MarketingEntity {
 	public void setCompany(String company) {
 		this.company = company;
 	}
-	public List<Document> getDocuments() {
+	public List<Content> getDocuments() {
 		return documents;
 	}
-	public void setDocuments(List<Document> documents) {
+	public void setDocuments(List<Content> documents) {
 		this.documents = documents;
 	}
 	public String getCoverImageName () {

@@ -7,11 +7,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import it.saydigital.vdr.model.enumeration.DocType;
+import it.saydigital.vdr.model.enumeration.ContentType;
 
 @Entity
-public class Document {
+public class Content {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +21,18 @@ public class Document {
 	private Long originId;
 	private Long mktEntityId;
 	@Enumerated(EnumType.STRING)
-	private DocType docType;
+	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
+	private ContentType type;
 	private String name;
 	private Long father;
 	@Column(length = 1000)
 	private String path;
+	@ManyToOne
+	@JoinColumn(name="link_id")
+	private ContentLink content;
 	
 	
-	public Document() {
+	public Content() {
 		super();
 	}
 	public Long getId() {
@@ -47,12 +53,6 @@ public class Document {
 	public void setMktEntityId(Long mktEntityId) {
 		this.mktEntityId = mktEntityId;
 	}
-	public DocType getDocType() {
-		return docType;
-	}
-	public void setDocType(DocType docType) {
-		this.docType = docType;
-	}
 	public String getName() {
 		return name;
 	}
@@ -70,6 +70,18 @@ public class Document {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public ContentLink getContent() {
+		return content;
+	}
+	public void setContent(ContentLink content) {
+		this.content = content;
+	}
+	public ContentType getType() {
+		return type;
+	}
+	public void setType(ContentType type) {
+		this.type = type;
 	}
 	
 	

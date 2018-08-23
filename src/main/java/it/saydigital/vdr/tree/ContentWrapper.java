@@ -3,16 +3,16 @@ package it.saydigital.vdr.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.saydigital.vdr.model.Document;
+import it.saydigital.vdr.model.Content;
 
 
-public class DocumentWrapper {
+public class ContentWrapper {
 	
 	private long id;
-	private String docType;
+	private String type;
 //	private String name;
 	private String text;
-	private List<DocumentWrapper> nodes = new ArrayList<>();
+	private List<ContentWrapper> nodes = new ArrayList<>();
 	
 //	public DocumentWrapper(long id, String docType, String name, String text, List<DocumentWrapper> nodes) {
 //		super();
@@ -23,11 +23,11 @@ public class DocumentWrapper {
 //		this.nodes = nodes;
 //	}
 	
-	public DocumentWrapper(Document document) {
-		this.id = document.getId();
-		this.docType = document.getDocType().toString();
+	public ContentWrapper(Content content) {
+		this.id = content.getId();
+		this.type = content.getType().toString();
 //		this.name = name;
-		this.text = document.getName();
+		this.text = content.getName();
 //		this.nodes = nodes;
 	}
 	
@@ -45,14 +45,14 @@ public class DocumentWrapper {
 
 
 
-	public String getDocType() {
-		return docType;
+	public String getType() {
+		return type;
 	}
 
 
 
-	public void setDocType(String docType) {
-		this.docType = docType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 
@@ -69,11 +69,11 @@ public class DocumentWrapper {
 
 
 
-	public List<DocumentWrapper> getNodes() {
+	public List<ContentWrapper> getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(List<DocumentWrapper> nodes) {
+	public void setNodes(List<ContentWrapper> nodes) {
 		this.nodes = nodes;
 	}
 	
