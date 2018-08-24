@@ -56,10 +56,72 @@
 	<input type="hidden" id="doctree" th:value="${docTree}" />
 	
 	<br><br><br>
-	
+	<div class="container" id="docSection">
+	<div class="row">
+	<div class="col-sm-8">
 	<div id="docTree">
 	</div>
+	<br>
+	<br>
+	<br>
+	asdad
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	</div>
+	<div class="col-sm-4">
+	<div id="downloadPanel">
+	<button type="button" class="btn btn-secondary btn-lg btn-block">Download</button>
+	</div>
+	</div>
+	</div>
+	</div>
 	
+	<hr id="endDocs">
+	
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+
+	<br>
+	<br>
+	<br>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+
+	<br>
+	<br>
+	<br>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+
+	<br>
+	<br>
+	<br>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+
+	<br>
+	<br>
+	<br>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
+<p>aaaaaaa</p>
 
 
 	<div th:replace="fragments/footer :: footer"></div>
@@ -69,6 +131,19 @@
 	
 	
 <script>
+
+var docTreeOffset = $('#docSection').offset().top;
+$("#downloadPanel").css( "top", docTreeOffset );
+var dowloadpanelOffset = docTreeOffset
+$(window).scroll(function(){
+	var endDocsOffset = $('#endDocs').offset().top;
+
+	  if(($(window).scrollTop() + dowloadpanelOffset) >= endDocsOffset ){
+	      $( "#downloadPanel" ).css( "display", "none" );
+	  } else {
+	 $( "#downloadPanel" ).css( "display", "block" );
+	  }
+	});
 
 
 $('#docTree').treeview({
