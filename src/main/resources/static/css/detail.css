@@ -1,15 +1,25 @@
 .carousel .item {
-    width: 100%; /*slider width*/
+	width: 100%; /*slider width*/
 }
+
 .carousel .item img {
-    width: 100%; /*img width*/
+	width: 100%; /*img width*/
 }
 
 .carousel img {
-    width: 100%;
-    height: 450px;
+	width: 100%;
+	height: 450px;
 }
 
-#downloadPanel{
+#docTree {
+	min-height: 250px;
+}
+
+#downloadPanel {
 	position: fixed;
+	width: 25%;
+}
+
+#download {
+	margin-top: 15px;
 }

@@ -1,7 +1,11 @@
 package it.saydigital.vdr.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
+
+import it.saydigital.vdr.model.enumeration.ContentType;
 
 @Entity
 public class ContentLink {
@@ -9,8 +13,11 @@ public class ContentLink {
 	@Id
 	private String linkId;
 	private String filename;
-	private String path;
-	
+	private String uri;
+	private Boolean isExternal=false;
+	@Enumerated(EnumType.STRING)
+	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
+	private ContentType type;
 	
 	
 	public ContentLink() {
@@ -18,14 +25,17 @@ public class ContentLink {
 	}
 
 
-	public String getContentId() {
+
+	public String getLinkId() {
 		return linkId;
 	}
 
 
-	public void setContentId(String contentId) {
-		this.linkId = contentId;
+
+	public void setLinkId(String linkId) {
+		this.linkId = linkId;
 	}
+
 
 
 	public String getFilename() {
@@ -33,19 +43,51 @@ public class ContentLink {
 	}
 
 
+
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
 
-	public String getPath() {
-		return path;
+
+	public String getUri() {
+		return uri;
 	}
 
 
-	public void setPath(String path) {
-		this.path = path;
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
+
+
+
+	public Boolean getIsExternal() {
+		return isExternal;
+	}
+
+
+
+	public void setIsExternal(Boolean isExternal) {
+		this.isExternal = isExternal;
+	}
+
+
+
+	public ContentType getType() {
+		return type;
+	}
+
+
+
+	public void setType(ContentType type) {
+		this.type = type;
+	}
+
+	
+	
+
+
 	
 	
 

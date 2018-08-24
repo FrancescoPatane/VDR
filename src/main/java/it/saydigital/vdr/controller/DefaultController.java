@@ -75,13 +75,16 @@ public class DefaultController {
     public String entityDetails(Model uiModel, @RequestParam("entityName") String entityName) throws JsonProcessingException {
     	long entityId = mktRepository.findByName(entityName).getId();
     	List<Content> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
-    	
+    	Content firstImage = sliderImages.get(0);
+    	sliderImages.remove(0);
 //    	Map<String, Object> son = new HashMap<String, Object>();
 //    	son.put("text", "son");
 //    	Map<String, Object> json = new HashMap<String, Object>();
 //    	json.put("text", "NODO1");
 //    	json.put("nodes", son);
 //    	ObjectMapper mapper = new ObjectMapper();
+    	uiModel.addAttribute("entityName", entityName);
+    	uiModel.addAttribute("firstImage", firstImage);
     	uiModel.addAttribute("sliderImages", sliderImages);
     	uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
         return "/detail";
