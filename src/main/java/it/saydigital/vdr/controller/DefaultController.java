@@ -1,22 +1,24 @@
 package it.saydigital.vdr.controller;
 
 
+import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import it.saydigital.vdr.download.DownloadManager;
 import it.saydigital.vdr.model.Content;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
@@ -28,7 +30,6 @@ import it.saydigital.vdr.tree.TreeManager;
 @Controller
 public class DefaultController {
 
-	
     @Autowired
     private UserRepository userRepository;
     
@@ -40,6 +41,9 @@ public class DefaultController {
     
     @Autowired
     private TreeManager treeManager;
+    
+    @Autowired
+    private DownloadManager downloadManager;
     
 
     @GetMapping(value = { "/", "/home" })
@@ -77,12 +81,6 @@ public class DefaultController {
     	List<Content> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
     	Content firstImage = sliderImages.get(0);
     	sliderImages.remove(0);
-//    	Map<String, Object> son = new HashMap<String, Object>();
-//    	son.put("text", "son");
-//    	Map<String, Object> json = new HashMap<String, Object>();
-//    	json.put("text", "NODO1");
-//    	json.put("nodes", son);
-//    	ObjectMapper mapper = new ObjectMapper();
     	uiModel.addAttribute("entityName", entityName);
     	uiModel.addAttribute("firstImage", firstImage);
     	uiModel.addAttribute("sliderImages", sliderImages);
@@ -94,5 +92,19 @@ public class DefaultController {
     private User getUser (String email) {
     	return userRepository.findByEmail(email);
     }
+    
+    
+    @RequestMapping(value = "/download", method = RequestMethod.GET, produces = "application/pdf")
+    public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException {
+    	byte[] content = downloadManager.serveResource(contentId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = "cv.pdf";
+        headers.add("content-disposition", "inline;filename=" + filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(content, headers, HttpStatus.OK);
+        return response;
+    }
+    
 
 }

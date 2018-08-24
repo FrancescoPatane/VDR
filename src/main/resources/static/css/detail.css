@@ -23,3 +23,7 @@
 #download {
 	margin-top: 15px;
 }
+
+li .icon{
+    margin-right: 25px !important;
+}

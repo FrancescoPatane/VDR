@@ -3,13 +3,22 @@
 <head>
 <!-- Required meta tags -->
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+	crossorigin="anonymous">
+
 
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/detail.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-treeview.min.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap-treeview.min.css}" />
 
 
 </head>
@@ -17,148 +26,123 @@
 
 
 	<div th:replace="fragments/navbar :: navbar">...</div>
-	
+
 	<section class="carouselSection">
-	
-	<div id="slider" class="carousel slide" data-ride="carousel">
-  <ul class="carousel-indicators">
-    <li data-target="#demo" data-slide-to="0" class="active"></li>
-    <li data-target="#demo" data-slide-to="1"></li>
-  </ul>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-	<img th:if="${firstImage.content.isExternal}" th:src="@{${firstImage.content.uri}}">
-	<img th:unless="${firstImage.content.isExternal}" th:src="@{'/images/'+${firstImage.content.filename}}">
-      <div class="carousel-caption">
-        <h1 th:text="${entityName}"></h1>
-      </div>   
-    </div>
-    <div class="carousel-item" th:each="image : ${sliderImages}">
-	<img th:if="${image.content.isExternal}" th:src="@{${image.content.uri}}">
-	<img th:unless="${image.content.isExternal}" th:src="@{'/images/'+${image.content.filename}}">
-      <div class="carousel-caption">
-        <h1 th:text="${entityName}"></h1>
-      </div> 
-    </div>
 
-  </div>
-  <a class="carousel-control-prev" href="#slider" data-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </a>
-  <a class="carousel-control-next" href="#slider" data-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </a>
-</div>
+		<div id="slider" class="carousel slide" data-ride="carousel">
+			<ul class="carousel-indicators">
+				<li data-target="#demo" data-slide-to="0" class="active"></li>
+				<li data-target="#demo" data-slide-to="1"></li>
+			</ul>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img th:if="${firstImage.content.isExternal}"
+						th:src="@{${firstImage.content.uri}}"> <img
+						th:unless="${firstImage.content.isExternal}"
+						th:src="@{'/images/'+${firstImage.content.filename}}">
+					<div class="carousel-caption">
+						<h1 th:text="${entityName}"></h1>
+					</div>
+				</div>
+				<div class="carousel-item" th:each="image : ${sliderImages}">
+					<img th:if="${image.content.isExternal}"
+						th:src="@{${image.content.uri}}"> <img
+						th:unless="${image.content.isExternal}"
+						th:src="@{'/images/'+${image.content.filename}}">
+					<div class="carousel-caption">
+						<h1 th:text="${entityName}"></h1>
+					</div>
+				</div>
+
+			</div>
+			<a class="carousel-control-prev" href="#slider" data-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</a> <a class="carousel-control-next" href="#slider" data-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</a>
+		</div>
 	</section>
-	
-	<br><br><br>
-	
+
+	<br>
+	<br>
+	<br>
+
+
+	<br>
+	<br>
 	<input type="hidden" id="doctree" th:value="${docTree}" />
-	
-	<br><br><br>
+
+	<br>
+	<br>
+	<br>
 	<div class="container" id="docSection">
-	<div class="row">
-	<div class="col-sm-8">
-	<div id="docTree">
+		<div class="row">
+			<div class="col-sm-8">
+				<div id="docTree"></div>
+			</div>
+			<div class="col-sm-4">
+				<div id="downloadPanel">
+					<h5></h5>
+					<div id="download">
+						<i aria-hidden="true"></i>
+						<button type="button" class="btn btn-secondary float-right"
+							onclick="download()">Download</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	</div>
-	<div class="col-sm-4">
-	<div id="downloadPanel">
-	<h5>Element</h5>
-	<div id="download">
-	<i class="fa fa-file-pdf-o fa-2x" aria-hidden="true"></i>
-	<button type="button" class="btn btn-secondary float-right">Download</button>
-	</div>
-	
-	</div>
-	</div>
-	</div>
-	</div>
-	
+
+	<input type="hidden" id="selectedNode" />
+
 	<hr id="endDocs">
-	
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-
-	<br>
-	<br>
-	<br>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-
-	<br>
-	<br>
-	<br>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-
-	<br>
-	<br>
-	<br>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-
-	<br>
-	<br>
-	<br>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<p>aaaaaaa</p>
-<img th:src="@{/image.jpg}"></img>
-<img th:src="@{/images/download.jpg}"></img>
 
 
-	<div th:replace="fragments/footer :: footer"></div>
-
-	
-	<script type="text/javascript" th:src="@{/js/bootstrap-treeview.min.js}"></script>
-	
-	
-<script>
-
-var docTreeOffset = $('#docSection').offset().top;
-$("#downloadPanel").css( "top", docTreeOffset );
-var dowloadpanelOffset = docTreeOffset + $("#downloadPanel").outerHeight(true);
-$(window).scroll(function(){
-	var endDocsOffset = $('#endDocs').offset().top;
-
-	  if(($(window).scrollTop() + dowloadpanelOffset) >= endDocsOffset ){
-	      $( "#downloadPanel" ).css( "display", "none" );
-	  } else {
-	 $( "#downloadPanel" ).css( "display", "block" );
-	  }
-	});
+	<footer>
+		<div th:replace="fragments/footer :: scripts"></div>
+		<script type="text/javascript"
+			th:src="@{/js/bootstrap-treeview.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/detail.js}"></script>
+	</footer>
 
 
-$('#docTree').treeview({
-// 	color: "#2b8835",s
-// 	electedBackColor: "#2b8835", 
-	expandIcon: 'fa fa-chevron-right',
-	collapseIcon: 'fa fa-chevron-down',
-	showTags: true,
-	levels: 0,
-// 	onNodeSelected: function(event, node) {
-// 		//$('p.to-edit').html(node.text);
-// 		$('#toEdit').html(node.text);
-// 	},
-	data: $("#doctree").val()});
-	
-	
 
-</script>	
+
+
+	<script>
+		var docTreeOffset = $('#docSection').offset().top;
+		$("#downloadPanel").css("top", docTreeOffset);
+		var dowloadpanelOffset = docTreeOffset
+				+ $("#downloadPanel").outerHeight(true);
+		$(window).scroll(function() {
+			var endDocsOffset = $('#endDocs').offset().top;
+
+			if (($(window).scrollTop() + dowloadpanelOffset) >= endDocsOffset) {
+				$("#downloadPanel").css("display", "none");
+			} else {
+				$("#downloadPanel").css("display", "block");
+			}
+		});
+
+		$('#docTree').treeview({
+			// 	color: "#2b8835",s
+			// 	electedBackColor: "#2b8835", 
+			// 	expandIcon: 'fa fa-chevron-right',
+			// 	collapseIcon: 'fa fa-chevron-down',
+			expandIcon : 'far fa-folder fa-2x',
+			collapseIcon : 'far fa-folder-open fa-2x',
+			showTags : true,
+			levels : 0,
+			onNodeSelected : function(event, node) {
+				$("#downloadPanel h5").html(node.text);
+				$("#selectedNode").val(node.id);
+				var icon = selectIconClass(node.type);
+				$("#download i").removeClass();
+				$("#download i").addClass(icon);
+			},
+			data : $("#doctree").val()
+		});
+	</script>
 
 
 </body>

@@ -5,5 +5,6 @@ public enum ContentType {
 	DOCUMENT,
 	COVER_IMAGE,
 	SLIDER_IMAGE,
-	IMAGE;
+	IMAGE,
+	ARCHIVE;
 }
