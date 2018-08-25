@@ -18,12 +18,56 @@ function selectIconClass(type){
 };
 
 
-
-
 function download(){
 
 	var contentId = $("#selectedNode").val();
 	var url = document.location.origin;
 	url += "/download?contentId="+contentId;
 	window.open(url);
+}
+
+function setUpView(){
+	setUpAnimation();
+	setUpTree();
+}
+
+
+function setUpAnimation(){
+	var dowloadpanelTop = $("#downloadPanel").offset().top;
+	var dowloadpanelBottomTop = $("#downloadPanel").offset().top + $("#downloadPanel").outerHeight(true);
+	var startDocsOffset = $('#startDocs').offset().top;
+	var endDocsOffset = $('#endDocs').offset().top;
+	if (dowloadpanelTop < startDocsOffset || dowloadpanelBottomTop > endDocsOffset) {
+		$("#downloadPanel").css("right", "-50%");
+	}
+	$(window).scroll(function() {
+		dowloadpanelTop = $("#downloadPanel").offset().top;
+		 dowloadpanelBottomTop = $("#downloadPanel").offset().top + $("#downloadPanel").outerHeight(true);
+		 endDocsOffset = $('#endDocs').offset().top;
+		 startDocsOffset = $('#startDocs').offset().top;
+		if (dowloadpanelTop < startDocsOffset || dowloadpanelBottomTop > endDocsOffset) {
+			$("#downloadPanel").css("right", "-50%");
+		} else {
+			$("#downloadPanel").css("right", "inherit");
+		}
+	});
+}
+
+
+
+function setUpTree(){
+	$('#docTree').treeview({
+		expandIcon : 'far fa-folder fa-2x',
+		collapseIcon : 'far fa-folder-open fa-2x',
+		showTags : true,
+		levels : 0,
+		onNodeSelected : function(event, node) {
+			$("#downloadPanel h5").html(node.text);
+			$("#selectedNode").val(node.id);
+			var icon = selectIconClass(node.type);
+			$("#download i").removeClass();
+			$("#download i").addClass(icon);
+		},
+		data : $("#doctree").val()
+	});
 }
