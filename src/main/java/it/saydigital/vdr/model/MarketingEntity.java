@@ -35,7 +35,7 @@ public class MarketingEntity {
           name = "user_id", referencedColumnName = "id")) 
     private Set<User> users = new HashSet<>();
     @OneToMany(mappedBy="mktEntityId")
-    private List<Content> documents;
+    private List<Content> contents;
     
     
 	public MarketingEntity() {
@@ -90,17 +90,25 @@ public class MarketingEntity {
 	public void setCompany(String company) {
 		this.company = company;
 	}
-	public List<Content> getDocuments() {
-		return documents;
+	public List<Content> getContents() {
+		return contents;
 	}
-	public void setDocuments(List<Content> documents) {
-		this.documents = documents;
+	public void setContents(List<Content> contents) {
+		this.contents = contents;
 	}
-	public String getCoverImageName () {
+	public String getCompanyImageName () {
 		if (this.company != null && this.company.length()>0)
-			return "/icons/"+this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();
+			return this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();
 		else
-			return "/img/defaultcover.png";
+			return null;
+	}
+	
+	public ContentLink  getCoverLink() {
+		for (Content content: this.contents) {
+			if (content.getType().toString().equals("COVER_IMAGE"))
+				return content.getContent();
+		}
+		return null;
 	}
     
 

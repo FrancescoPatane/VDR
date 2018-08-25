@@ -14,7 +14,7 @@ public class ContentLink {
 	private String linkId;
 	private String filename;
 	private String uri;
-	private Boolean isExternal=false;
+	private Boolean isExternal = false;
 	@Enumerated(EnumType.STRING)
 	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
 	private ContentType type;

@@ -27,7 +27,7 @@
 
 	<div th:replace="fragments/navbar :: navbar">...</div>
 
-	<section class="carouselSection">
+	<section class="carouselSection" th:if="${firstImage != null}">
 
 		<div id="slider" class="carousel slide" data-ride="carousel">
 			<ul class="carousel-indicators">
@@ -36,19 +36,19 @@
 			</ul>
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img th:if="${firstImage.content.isExternal}"
-						th:src="@{${firstImage.content.uri}}"> <img
-						th:unless="${firstImage.content.isExternal}"
-						th:src="@{'/images/'+${firstImage.content.filename}}">
+					<img th:if="${firstImage.isExternal}"
+						th:src="@{${firstImage.uri}}"> <img
+						th:unless="${firstImage.isExternal}"
+						th:src="@{'/images/'+${firstImage.filename}}">
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
-					<img th:if="${image.content.isExternal}"
-						th:src="@{${image.content.uri}}"> <img
-						th:unless="${image.content.isExternal}"
-						th:src="@{'/images/'+${image.content.filename}}">
+					<img th:if="${image.isExternal}"
+						th:src="@{${image.uri}}"> <img
+						th:unless="${image.isExternal}"
+						th:src="@{'/images/'+${image.filename}}">
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
@@ -75,7 +75,7 @@
 	<h3 th:text="${entity.description}"></h3>
 	</div>
 		<div class="col-sm-3">
-		<img class="float-right" th:src="@{${entity.getCoverImageName()}}" height="80" width="100"></img>
+		<img class="float-right" th:src="@{${entity.getCompanyImageName()}}" height="80" width="100"></img>
 	</div>
 	</div>
 </div>
@@ -99,12 +99,15 @@
 			</div>
 		</div>
 	</div>
+	
 
 	<input type="hidden" id="selectedNode" />
 
 
 
 	<hr id="endDocs">
+	
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 
 	<footer>
@@ -121,16 +124,21 @@
 	<script>
 		var dowloadpanelTop = $("#downloadPanel").offset().top;
 		var dowloadpanelBottomTop = $("#downloadPanel").offset().top + $("#downloadPanel").outerHeight(true);
-		$("#downloadPanel").css("display", "none");
+		var startDocsOffset = $('#startDocs').offset().top;
+		var endDocsOffset = $('#endDocs').offset().top;
+		var scroll=0;
+		if (dowloadpanelTop < startDocsOffset || dowloadpanelBottomTop > endDocsOffset) {
+			$("#downloadPanel").css("right", "-50%");
+		}
 		$(window).scroll(function() {
-			var docTreeOffset = $('#docSection').offset().top;
-			var endDocsOffset = $('#endDocs').offset().top;
-			var startDocsOffset = $('#startDocs').offset().top;
-			var scroll = $(window).scrollTop();
-			if ((scroll + dowloadpanelBottomTop) > endDocsOffset || (scroll + dowloadpanelTop) < startDocsOffset) {
-				$("#downloadPanel").css("display", "none");
+			dowloadpanelTop = $("#downloadPanel").offset().top;
+			 dowloadpanelBottomTop = $("#downloadPanel").offset().top + $("#downloadPanel").outerHeight(true);
+			 endDocsOffset = $('#endDocs').offset().top;
+			 startDocsOffset = $('#startDocs').offset().top;
+			if (dowloadpanelTop < startDocsOffset || dowloadpanelBottomTop > endDocsOffset) {
+				$("#downloadPanel").css("right", "-50%");
 			} else {
-				$("#downloadPanel").css("display", "block");
+				$("#downloadPanel").css("right", "inherit");
 			}
 		});
 

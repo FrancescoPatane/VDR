@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import it.saydigital.vdr.model.Content;
+import it.saydigital.vdr.model.ContentLink;
 
 
 public interface ContentRepository extends JpaRepository<Content, Long>{
@@ -15,7 +16,7 @@ public interface ContentRepository extends JpaRepository<Content, Long>{
 	 
 	 List<Content> findByFather (Long fatherId);
 	 
-	 @Query("SELECT c FROM Content c  WHERE c.mktEntityId = ?1 AND c.type = 'SLIDER_IMAGE'") 
-	 List<Content> findSliderImagesByEntityId (Long entityId);
+	 @Query("SELECT c.content FROM Content c  WHERE c.mktEntityId = ?1 AND c.type = 'SLIDER_IMAGE'") 
+	 List<ContentLink> findSliderImagesByEntityId (Long entityId);
 
 }

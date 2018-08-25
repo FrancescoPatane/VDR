@@ -31,11 +31,30 @@
 
 
 		<div class="row" th:each="entity : ${entities}">
-<!-- <th th:each="family : ${families}"> -->
-			<div class="col"><a th:href="@{/detail(entityName=${entity.name})}"><img th:src="@{/img/defaultcover.png}" height="80" width="100"></img></a></div>
+			<div class="col">
+			<a th:href="@{/detail(entityName=${entity.name})}">
+			
+			<th:block th:switch="${entity.getCoverLink()}">
+			
+			<img th:case="${null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
+			
+			<th:block th:case="*">
+			
+				<img th:if="${entity.getCoverLink().isExternal}" th:src="${entity.getCoverLink().uri}" height="80" width="100"></img>
+				<img th:unless="${entity.getCoverLink().isExternal}" th:src="@{'/' + ${entity.id} + '/' + ${entity.getCoverLink().filename}}" height="80" width="100"></img>
+			
+			</th:block>
+			</th:block>
+			
+
+			</a>
+			</div>
 			<div class="col-4"><p th:text="${entity.name}"></p></div>
 			<div class="col"></div>
-			<div class="col"><img th:src="@{${entity.getCoverImageName()}}" height="80" width="100"></img></div>
+			<div class="col">
+			<img th:if="${entity.getCompanyImageName() != null}" th:src="@{'/icons/'+${entity.getCompanyImageName()}}" height="80" width="100"></img>
+			<img th:unless="${entity.getCompanyImageName() != null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
+			</div>
 
 		</div>
 
