@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itextpdf.text.DocumentException;
+
 import it.saydigital.vdr.download.resourceserver.ResourceServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServerFactory;
 import it.saydigital.vdr.model.Content;
@@ -31,6 +33,7 @@ import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.tree.TreeManager;
+import it.saydigital.vdr.watermark.WatermarkPdf;
 
 @Controller
 public class DefaultController {
@@ -68,8 +71,7 @@ public class DefaultController {
 
 	@GetMapping("/user")
 	public String user(Model uiModel) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = getUser(auth.getName());
+		User user = getUser(this.getAuthentication().getName());
 		List<MarketingEntity> userEntities = user.getMktEntitiesOrdered();
 		Collections.reverse(userEntities);
 		uiModel.addAttribute("entities", userEntities);
@@ -102,12 +104,13 @@ public class DefaultController {
 	}
 
 	@GetMapping("/download")
-	public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException {
+	public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException, DocumentException {
+		String email = this.getAuthentication().getName();
 		Optional<Content> optContent = contentRepository.findById(contentId);
 		if (optContent.isPresent()) {
 			Content content = optContent.get();
 			ResourceServer server = serverFactory.createResourceServer(content);
-			byte [] bytes = server.serveResource(content);
+			byte [] bytes = server.serveResource(content, email);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.parseMediaType(server.getMimetype()));
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
@@ -116,6 +119,13 @@ public class DefaultController {
 			return null;
 		}
 	}
+	
+	private Authentication getAuthentication() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return auth;
+	}
+	
+
 
 
 }

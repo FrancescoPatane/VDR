@@ -10,6 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VdrApplication {
 
 	public static void main(String[] args) {
+		File tempFolder = new File("temp");
+		if (!tempFolder.exists() || !tempFolder.isDirectory()) {
+			tempFolder.mkdir();
+		}
 		SpringApplication.run(VdrApplication.class, args);
 	}
 }

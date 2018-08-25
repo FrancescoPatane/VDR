@@ -96,6 +96,7 @@ public class MarketingEntity {
 	public void setContents(List<Content> contents) {
 		this.contents = contents;
 	}
+	
 	public String getCompanyImageName () {
 		if (this.company != null && this.company.length()>0)
 			return this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();
@@ -109,6 +110,15 @@ public class MarketingEntity {
 				return content.getContent();
 		}
 		return null;
+	}
+	
+	public int getNumberOfAssets() {
+		int c = 0;
+		for (Content content : contents) {
+			if (content.getType().toString().equals("FOLDER") && content.getFather() == null)
+				c++;
+		}
+		return c;
 	}
     
 

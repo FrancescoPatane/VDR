@@ -6,9 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.itextpdf.text.DocumentException;
+
 import it.saydigital.vdr.model.Content;
 import it.saydigital.vdr.model.ContentLink;
 import it.saydigital.vdr.util.EnvHandler;
+import it.saydigital.vdr.watermark.WatermarkPdf;
 
 
 public class DocumentServer implements ResourceServer{
@@ -16,7 +19,7 @@ public class DocumentServer implements ResourceServer{
 	private final String mimeType = "application/pdf";
 
 	@Override
-	public byte[] serveResource(Content content) {
+	public byte[] serveResource(Content content, String text) throws DocumentException, IOException {
 		ContentLink contentLink = content.getContent();
 		String resourcePath;
 		if (contentLink.getIsExternal()) {
@@ -24,15 +27,11 @@ public class DocumentServer implements ResourceServer{
 		}else {
 			resourcePath = EnvHandler.getProperty("app.content_folder")+File.separator+content.getMktEntityId()+File.separator+contentLink.getFilename();
 		}
-		Path path = Paths.get(resourcePath);
+		String wateredFilePath = WatermarkPdf.applyWatermark(resourcePath, text);
+		Path path = Paths.get(wateredFilePath);
 	    byte[] bytes = null;
-	    try {
-	    	bytes = Files.readAllBytes(path);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException("Couldn't read file");
-		}
+	    bytes = Files.readAllBytes(path);
+	    path.toFile().delete();
 	    return bytes;
 	}
 

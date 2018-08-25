@@ -1,16 +1,21 @@
 
 
-section{
+.parallax{
 	background: url(../img/architecture.jpg) no-repeat center center scroll;
 	top:0px;
     left:0px;
     right:0px;
     height: 250px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-h1{
-	padding-top: 90px;
-}
+/* .parallax h3{ */
+/*     padding: 130px; */
+/* 	color: #343a40; */
+/* } */
 
 .listContainer{
 	padding: 5%;
