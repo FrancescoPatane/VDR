@@ -11,6 +11,10 @@
 	height: 450px;
 }
 
+#description {
+	text-align: center;
+}
+
 #docTree {
 	min-height: 250px;
 }
@@ -18,12 +22,14 @@
 #downloadPanel {
 	position: fixed;
 	width: 25%;
+	top: 60%;
+/* 	display:none; */
 }
 
 #download {
 	margin-top: 15px;
 }
 
-li .icon{
-    margin-right: 25px !important;
+li .icon {
+	margin-right: 25px !important;
 }

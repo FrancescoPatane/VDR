@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 
 public class DocumentServer implements ResourceServer{
+	
+	public static final String mimeType = "application/pdf";
 
 	@Override
 	public byte[] serveResource(String resourcePath) {
@@ -19,6 +21,11 @@ public class DocumentServer implements ResourceServer{
 			e.printStackTrace();
 		}
 	    return content;
+	}
+
+	@Override
+	public String getMimetype() {
+		return mimeType;
 	}
 	
 

@@ -4,6 +4,8 @@ package it.saydigital.vdr.controller;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -77,11 +79,12 @@ public class DefaultController {
     
     @GetMapping("/detail")
     public String entityDetails(Model uiModel, @RequestParam("entityName") String entityName) throws JsonProcessingException {
-    	long entityId = mktRepository.findByName(entityName).getId();
+    	MarketingEntity mktEntity = mktRepository.findByName(entityName);
+    	long entityId = mktEntity.getId();
     	List<Content> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
     	Content firstImage = sliderImages.get(0);
     	sliderImages.remove(0);
-    	uiModel.addAttribute("entityName", entityName);
+    	uiModel.addAttribute("entity", mktEntity);
     	uiModel.addAttribute("firstImage", firstImage);
     	uiModel.addAttribute("sliderImages", sliderImages);
     	uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
@@ -93,15 +96,13 @@ public class DefaultController {
     	return userRepository.findByEmail(email);
     }
     
-    
-    @RequestMapping(value = "/download", method = RequestMethod.GET, produces = "application/pdf")
+    @GetMapping("/download")
     public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException {
-    	byte[] content = downloadManager.serveResource(contentId);
+    	Map<String, Object> map = downloadManager.serveResource(contentId);
+    	String mimeType = (String) map.get("mimeType");
+    	byte [] content = (byte[]) map.get("content");
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        String filename = "cv.pdf";
-        headers.add("content-disposition", "inline;filename=" + filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        headers.setContentType(MediaType.parseMediaType(mimeType));
         ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(content, headers, HttpStatus.OK);
         return response;
     }

@@ -41,7 +41,7 @@
 						th:unless="${firstImage.content.isExternal}"
 						th:src="@{'/images/'+${firstImage.content.filename}}">
 					<div class="carousel-caption">
-						<h1 th:text="${entityName}"></h1>
+						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
@@ -50,7 +50,7 @@
 						th:unless="${image.content.isExternal}"
 						th:src="@{'/images/'+${image.content.filename}}">
 					<div class="carousel-caption">
-						<h1 th:text="${entityName}"></h1>
+						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 
@@ -66,14 +66,21 @@
 	<br>
 	<br>
 	<br>
-
-
-	<br>
-	<br>
+<div class="container" id="introSection">
+<div class="row">
+<div class="col-sm-3">
+	<a th:href="@{/user}"><i class="fas fa-backward fa-3x"></i></a>
+	</div>
+	<div class="col-sm-6" id="description">
+	<h3 th:text="${entity.description}"></h3>
+	</div>
+		<div class="col-sm-3">
+		<img class="float-right" th:src="@{${entity.getCoverImageName()}}" height="80" width="100"></img>
+	</div>
+	</div>
+</div>
 	<input type="hidden" id="doctree" th:value="${docTree}" />
-
-	<br>
-	<br>
+<hr id="startDocs">
 	<br>
 	<div class="container" id="docSection">
 		<div class="row">
@@ -95,6 +102,8 @@
 
 	<input type="hidden" id="selectedNode" />
 
+
+
 	<hr id="endDocs">
 
 
@@ -110,19 +119,21 @@
 
 
 	<script>
-		var docTreeOffset = $('#docSection').offset().top;
-		$("#downloadPanel").css("top", docTreeOffset);
-		var dowloadpanelOffset = docTreeOffset
-				+ $("#downloadPanel").outerHeight(true);
+		var dowloadpanelTop = $("#downloadPanel").offset().top;
+		var dowloadpanelBottomTop = $("#downloadPanel").offset().top + $("#downloadPanel").outerHeight(true);
+		$("#downloadPanel").css("display", "none");
 		$(window).scroll(function() {
+			var docTreeOffset = $('#docSection').offset().top;
 			var endDocsOffset = $('#endDocs').offset().top;
-
-			if (($(window).scrollTop() + dowloadpanelOffset) >= endDocsOffset) {
+			var startDocsOffset = $('#startDocs').offset().top;
+			var scroll = $(window).scrollTop();
+			if ((scroll + dowloadpanelBottomTop) > endDocsOffset || (scroll + dowloadpanelTop) < startDocsOffset) {
 				$("#downloadPanel").css("display", "none");
 			} else {
 				$("#downloadPanel").css("display", "block");
 			}
 		});
+
 
 		$('#docTree').treeview({
 			// 	color: "#2b8835",s
@@ -142,6 +153,7 @@
 			},
 			data : $("#doctree").val()
 		});
+		
 	</script>
 
 

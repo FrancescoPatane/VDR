@@ -1,6 +1,8 @@
 package it.saydigital.vdr.download;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,10 @@ public class DownloadManager {
     @Autowired
     private ContentRepository contentRepository;
 	
-	public byte[] serveResource(long contentId) {
+	public Map<String, Object> serveResource(long contentId) {
 		String path;
 		String type;
+		Map<String, Object> result  = new HashMap<>();
 		Optional<Content> optionalContent = contentRepository.findById(contentId);
 		if (optionalContent.isPresent()) {
 			Content content = optionalContent.get();
@@ -35,8 +38,12 @@ public class DownloadManager {
 				path = appConfig.getContentFolder()+File.separator+content.getMktEntityId()+File.separator+contentLink.getFilename();
 			}
 			type = contentLink.getType().toString();
-			ResourceServer server = ResourceServerFactory.createResourceServer(type); 
-			return server.serveResource(path);
+			ResourceServer server = ResourceServerFactory.createResourceServer(type);
+			String mimeType = server.getMimetype();
+			byte[] bytes = server.serveResource(path);
+			result.put("mimeType", mimeType);
+			result.put("content", bytes);
+			return result;
 		}else{
 			return null;
 		}
