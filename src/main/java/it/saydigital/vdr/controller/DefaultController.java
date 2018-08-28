@@ -33,7 +33,7 @@ import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.tree.TreeManager;
-import it.saydigital.vdr.watermark.WatermarkPdf;
+import it.saydigital.vdr.watermark.Watermarker;
 
 @Controller
 public class DefaultController {
