@@ -1,9 +1,11 @@
 package it.saydigital.vdr.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import it.saydigital.vdr.model.enumeration.ContentType;
 
@@ -12,9 +14,10 @@ public class ContentLink {
 	
 	@Id
 	private String linkId;
+	@NotNull
 	private String filename;
-	private String uri;
-	private Boolean isExternal = false;
+	@Column(length = 500)
+	private String path;
 	@Enumerated(EnumType.STRING)
 	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
 	private ContentType type;
@@ -49,31 +52,6 @@ public class ContentLink {
 	}
 
 
-
-	public String getUri() {
-		return uri;
-	}
-
-
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
-
-
-	public Boolean getIsExternal() {
-		return isExternal;
-	}
-
-
-
-	public void setIsExternal(Boolean isExternal) {
-		this.isExternal = isExternal;
-	}
-
-
-
 	public ContentType getType() {
 		return type;
 	}
@@ -82,6 +60,18 @@ public class ContentLink {
 
 	public void setType(ContentType type) {
 		this.type = type;
+	}
+
+
+
+	public String getPath() {
+		return path;
+	}
+
+
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	

@@ -31,18 +31,9 @@
 			<div class="col">
 			<a th:href="@{/detail(entityName=${entity.name})}">
 			
-			<th:block th:switch="${entity.getCoverLink()}">
+			<img th:if="${entity.getCoverLink() == null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
 			
-			<img th:case="${null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
-			
-			<th:block th:case="*">
-			
-				<img th:if="${entity.getCoverLink().isExternal}" th:src="${entity.getCoverLink().uri}" height="80" width="100"></img>
-				<img th:unless="${entity.getCoverLink().isExternal}" th:src="@{'/' + ${entity.id} + '/' + ${entity.getCoverLink().filename}}" height="80" width="100"></img>
-			
-			</th:block>
-			</th:block>
-			
+			<img th:unless="${entity.getCoverLink() == null}" th:src="@{'/images/' + ${entity.getCoverLink().filename}}" height="80" width="100"></img>
 
 			</a>
 			</div>

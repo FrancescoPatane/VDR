@@ -36,17 +36,13 @@
 			</ul>
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img th:if="${firstImage.isExternal}" th:src="@{${firstImage.uri}}">
-					<img th:unless="${firstImage.isExternal}"
-						th:src="@{'/images/'+${firstImage.filename}}">
+					<img th:src="@{'/images/'+${firstImage.filename}}">
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
-					<img th:if="${image.isExternal}" th:src="@{${image.uri}}"> <img
-						th:unless="${image.isExternal}"
-						th:src="@{'/images/'+${image.filename}}">
+					 <img th:src="@{'/images/'+${image.filename}}">
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>

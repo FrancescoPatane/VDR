@@ -15,24 +15,21 @@ import it.saydigital.vdr.watermark.Watermarker;
 
 
 public class DocumentServer implements ResourceServer{
-	
+
 	private final String mimeType = "application/pdf";
 
 	@Override
 	public byte[] serveResource(Content content, String text) throws DocumentException, IOException {
 		ContentLink contentLink = content.getContent();
-		String resourcePath;
-		if (contentLink.getIsExternal()) {
-			resourcePath = contentLink.getUri(); 
-		}else {
-			resourcePath = EnvHandler.getProperty("app.content_folder")+File.separator+content.getMktEntityId()+File.separator+contentLink.getFilename();
-		}
+		String resourcePath = contentLink.getPath();
+		if (resourcePath == null)
+			resourcePath = EnvHandler.getProperty("app.content_folder")+File.separator+"documents"+File.separator+contentLink.getFilename();
 		String wateredFilePath = Watermarker.applyWatermarkToPdf(resourcePath, text);
 		Path path = Paths.get(wateredFilePath);
-	    byte[] bytes = null;
-	    bytes = Files.readAllBytes(path);
-	    path.toFile().delete();
-	    return bytes;
+		byte[] bytes = null;
+		bytes = Files.readAllBytes(path);
+		path.toFile().delete();
+		return bytes;
 	}
 
 	@Override
@@ -41,8 +38,8 @@ public class DocumentServer implements ResourceServer{
 	}
 
 
-	
 
- 
+
+
 
 }
