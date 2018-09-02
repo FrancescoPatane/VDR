@@ -72,8 +72,8 @@ public class DefaultController {
 	@GetMapping("/user")
 	public String user(Model uiModel) {
 		User user = getUser(this.getAuthentication().getName());
-		List<MarketingEntity> userEntities = user.getMktEntitiesOrdered();
-		Collections.reverse(userEntities);
+		List<MarketingEntity> userEntities = mktRepository.findEntitiesByUserId(user.getId());
+		//Collections.reverse(userEntities);
 		uiModel.addAttribute("entities", userEntities);
 		return "/user";
 	}

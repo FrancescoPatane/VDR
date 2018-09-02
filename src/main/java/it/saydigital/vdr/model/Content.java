@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,9 @@ public class Content {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long originId;
-	private Long mktEntityId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "mkt_entity_id")
+	private MarketingEntity mktEntity;
 	@Enumerated(EnumType.STRING)
 	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
 	private ContentType type;
@@ -27,14 +30,11 @@ public class Content {
 	private Long father;
 	@Column(length = 1000)
 	private String path;
-	@ManyToOne
-	@JoinColumn(name="link_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "link_id")
 	private ContentLink content;
 	
-	
-	public Content() {
-		super();
-	}
+
 	public Long getId() {
 		return id;
 	}
@@ -47,14 +47,20 @@ public class Content {
 	public void setOriginId(Long originId) {
 		this.originId = originId;
 	}
-	public Long getMktEntityId() {
-		return mktEntityId;
-	}
-	public void setMktEntityId(Long mktEntityId) {
-		this.mktEntityId = mktEntityId;
-	}
+//	public Long getMktEntityId() {
+//		return mktEntityId;
+//	}
+//	public void setMktEntityId(Long mktEntityId) {
+//		this.mktEntityId = mktEntityId;
+//	}
 	public String getName() {
 		return name;
+	}
+	public MarketingEntity getMktEntity() {
+		return mktEntity;
+	}
+	public void setMktEntity(MarketingEntity mktEntity) {
+		this.mktEntity = mktEntity;
 	}
 	public void setName(String name) {
 		this.name = name;
@@ -71,20 +77,20 @@ public class Content {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public ContentLink getContent() {
-		return content;
-	}
-	public void setContent(ContentLink content) {
-		this.content = content;
-	}
 	public ContentType getType() {
 		return type;
 	}
 	public void setType(ContentType type) {
 		this.type = type;
 	}
+	public ContentLink getContent() {
+		return content;
+	}
+	public void setContent(ContentLink content) {
+		this.content = content;
+	}
 	
-	
+
 
 
 }

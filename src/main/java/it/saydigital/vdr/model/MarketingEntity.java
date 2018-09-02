@@ -1,9 +1,11 @@
 package it.saydigital.vdr.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,27 +22,29 @@ public class MarketingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique=true)
+    private String originId;
+    @Column(unique=true)
     private String name;
     @Column(length = 500)
     private String description;
     private String transactionManager;
     private String company;
     private String tmEmail;
+    private LocalDateTime creationDate;
     private Boolean isLocked;
-    @ManyToMany
-    @JoinTable( 
-        joinColumns = @JoinColumn(
-          name = "mkt_entity_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id")) 
-    private Set<User> users = new HashSet<>();
-    @OneToMany(mappedBy="mktEntityId")
+//    @ManyToMany
+//    @JoinTable( 
+//        joinColumns = @JoinColumn(
+//          name = "mkt_entity_id", referencedColumnName = "id"), 
+//        inverseJoinColumns = @JoinColumn(
+//          name = "user_id", referencedColumnName = "id")) 
+//    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy="mktEntity", orphanRemoval = true)
     private List<Content> contents;
+    @OneToMany(mappedBy="mktEntity", orphanRemoval = true)
+    private List<Authorization> Authorizations;
     
     
-	public MarketingEntity() {
-		super();
-	}
 	public Long getId() {
 		return id;
 	}
@@ -78,12 +82,12 @@ public class MarketingEntity {
 		this.isLocked = isLocked;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//	public void setUsers(Set<User> users) {
+//		this.users = users;
+//	}
 	public String getCompany() {
 		return company;
 	}
@@ -96,6 +100,22 @@ public class MarketingEntity {
 	public void setContents(List<Content> contents) {
 		this.contents = contents;
 	}
+	
+	
+	public String getOriginId() {
+		return originId;
+	}
+	public void setOriginId(String originId) {
+		this.originId = originId;
+	}
+	
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
+	}
+	
 	
 	public String getCompanyImageName () {
 		if (this.company != null && this.company.length()>0)

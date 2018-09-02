@@ -1,6 +1,8 @@
 package it.saydigital.vdr.model;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,16 +21,16 @@ public class Role {
  
     private String name;
     @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    private Set<User> users;
  
     @ManyToMany
     @JoinTable(
-        name = "roles_privileges", 
+        name = "role_privilege", 
         joinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    private Collection<Privilege> privileges = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -50,7 +52,7 @@ public class Role {
 		return users;
 	}
 
-	public void setUsers(Collection<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 

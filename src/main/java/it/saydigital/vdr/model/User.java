@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -22,33 +23,32 @@ import it.saydigital.vdr.model.comparator.MarketingEntityComparator;
 
 @Entity
 @Table(name = "user_")
-
 public class User {
   
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
  
-    private String firstName;
-    private String lastName;
     @Column(unique=true)
     @NotNull
     private String email;
     @NotNull
     private String password;
     private boolean enabled;
-    private boolean tokenExpired;
-    @ManyToMany(mappedBy = "users")
-    private Set<MarketingEntity> mktEntities = new HashSet<>();
+//    @ManyToMany(mappedBy = "users")
+//    private Set<MarketingEntity> mktEntities = new HashSet<>();
+    
+    @OneToMany(mappedBy="user", orphanRemoval = true)
+    private List<Authorization> Authorizations;
  
     @ManyToMany
     @JoinTable( 
-        name = "users_roles", 
+        name = "user_role", 
         joinColumns = @JoinColumn(
           name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
 	public Long getId() {
 		return id;
@@ -58,21 +58,6 @@ public class User {
 		this.id = id;
 	}
 
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
 
 	public String getEmail() {
 		return email;
@@ -98,34 +83,37 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public boolean isTokenExpired() {
-		return tokenExpired;
-	}
-
-	public void setTokenExpired(boolean tokenExpired) {
-		this.tokenExpired = tokenExpired;
-	}
 
 	public Collection<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Collection<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
-	public Set<MarketingEntity> getMktEntities() {
-		return mktEntities;
-	}
-
-	public void setMktEntities(Set<MarketingEntity> mktEntities) {
-		this.mktEntities = mktEntities;
-	}
+//	public Set<MarketingEntity> getMktEntities() {
+//		return mktEntities;
+//	}
+//
+//	public void setMktEntities(Set<MarketingEntity> mktEntities) {
+//		this.mktEntities = mktEntities;
+//	}
+	
+	
     
 	public List<MarketingEntity> getMktEntitiesOrdered() {
-		List<MarketingEntity> entities = new ArrayList<>(this.mktEntities);
+		List<MarketingEntity> entities = new ArrayList<>(/*this.mktEntities*/);
 		Collections.sort(entities, new MarketingEntityComparator());
 		return entities;
+	}
+
+	public List<Authorization> getAuthorizations() {
+		return Authorizations;
+	}
+
+	public void setAuthorizations(List<Authorization> authorizations) {
+		Authorizations = authorizations;
 	}
     
     

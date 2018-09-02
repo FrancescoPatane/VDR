@@ -1,10 +1,13 @@
 package it.saydigital.vdr.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import it.saydigital.vdr.model.enumeration.ContentType;
@@ -14,20 +17,15 @@ public class ContentLink {
 	
 	@Id
 	private String linkId;
-	@NotNull
 	private String filename;
 	@Column(length = 500)
 	private String path;
 	@Enumerated(EnumType.STRING)
 	//@Column(columnDefinition = "ENUM('FOLDER', 'DOCUMENT', 'COVER_IMAGE', 'SLIDER_IMAGE', 'IMAGE')")
 	private ContentType type;
+	@OneToMany(mappedBy="content")
+    private List<Content> contents;
 	
-	
-	public ContentLink() {
-		super();
-	}
-
-
 
 	public String getLinkId() {
 		return linkId;
@@ -73,6 +71,20 @@ public class ContentLink {
 	public void setPath(String path) {
 		this.path = path;
 	}
+
+
+
+	public List<Content> getContents() {
+		return contents;
+	}
+
+
+
+	public void setContents(List<Content> contents) {
+		this.contents = contents;
+	}
+	
+	
 
 	
 	
