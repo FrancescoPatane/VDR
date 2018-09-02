@@ -26,6 +26,23 @@ public class ContentLink {
 	@OneToMany(mappedBy="content")
     private List<Content> contents;
 	
+	
+
+	public ContentLink() {
+		super();
+	}
+
+
+
+	public ContentLink(String linkId, String filename, String path, ContentType type) {
+		super();
+		this.linkId = linkId;
+		this.filename = filename;
+		this.path = path;
+		this.type = type;
+	}
+
+
 
 	public String getLinkId() {
 		return linkId;

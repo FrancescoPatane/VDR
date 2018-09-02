@@ -3,6 +3,7 @@ package it.saydigital.vdr.api;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +34,10 @@ public class MktApiImpl {
 
 	@Autowired
 	private ContentLinkRepository clRepository;
-	
+
 	@Autowired
 	private AuthorizationRepository authRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -51,7 +52,6 @@ public class MktApiImpl {
 		LocalDateTime now = LocalDateTime.now();
 		newEntity.setCreationDate(now);
 		newEntity = mktRepository.save(newEntity);
-//		long newEntityId = newEntity.getId();
 		List<String> missingcontents = new ArrayList<>();
 		this.createContents(missingcontents, mktJSON.getContents(), newEntity);
 		return missingcontents;
@@ -74,7 +74,7 @@ public class MktApiImpl {
 			content.setContent(this.getCLIfExistsOrCreateEmpty(missingcontents, contentJSON.getContentId()));
 		content.setFather(fatherId);
 		content.setMktEntity(newEntity);
-		content.setPath("/"+contentJSON.getName());
+		content.setPath(path+"/"+contentJSON.getName());
 		contentRepository.save(content);
 		if(contentJSON.getChilds() != null && contentJSON.getChilds().size() > 0) {
 			for (ContentJSON child : contentJSON.getChilds()) {
@@ -108,18 +108,70 @@ public class MktApiImpl {
 		mktRepository.deleteById(id);
 	}
 
-	public String createAuthorization(Map<String, String> payload) {
+	public Map<String, Object> createAuthorization(Map<String, String> payload) {
+		Map<String, Object> resultMessage = new HashMap<>();
 		MarketingEntity targetEntity = mktRepository.findByOriginId(payload.get("mktEntity"));
-		User targetUser = userRepository.findByEmail(payload.get("email"));
-		AuthorizationId authId = new AuthorizationId(targetEntity.getId(), targetUser.getId());
-		if (authRepository.existsById(authId))
-			return "User is already configurated for package";
-		else
-		{
-			Authorization auth = new Authorization(authId, targetUser, targetEntity);
-			authRepository.save(auth);
-			return "User configurated for package";
+		if(targetEntity == null) {
+			resultMessage.put("error", "Could not find any entity matching the id in input.");
+			resultMessage.put("statusCode", 404);
+			return resultMessage;
 		}
+		User targetUser = userRepository.findByEmail(payload.get("email"));
+		if(targetUser == null) {
+			resultMessage.put("error", "Could not find any user matching the email address in input.");
+			resultMessage.put("statusCode", 404);
+			return resultMessage;
+		}
+		String opType = payload.get("type");
+		AuthorizationId authId = new AuthorizationId(targetEntity.getId(), targetUser.getId());
+		if (opType.equalsIgnoreCase("allow")) {
+			if (authRepository.existsById(authId)) {
+				resultMessage.put("success", "User is already configurated for package.");
+			}else{
+				Authorization auth = new Authorization(authId, targetUser, targetEntity);
+				authRepository.save(auth);
+				resultMessage.put("success", "User configurated for package.");
+			}
+		}else {
+			if (opType.equalsIgnoreCase("deny")) {
+				if (authRepository.existsById(authId)) {
+					authRepository.deleteById(authId);
+					resultMessage.put("success", "Authorization revoked for user.");
+				}else {
+					resultMessage.put("success", "User is already not authorized to view the package.");
+				}
+			}else {
+				resultMessage.put("error", "Invalid type of authorization");
+				resultMessage.put("statusCode", 400);
+			}
+
+		}
+
+
+
+		return resultMessage;
+	}
+
+
+	public Map<String, Object> linkContent(Map<String, String> payload) {
+		Map<String, Object> resultMessage = new HashMap<>();
+		String linkId = payload.get("contentId");
+		String filename = payload.get("filename");
+		String path = payload.get("path");
+		String type = payload.get("type");
+		ContentLink clink = null ;
+		if (clRepository.existsById(linkId)) {
+			clink = clRepository.findById(linkId).get();
+			clink.setPath(path);
+			clink.setFilename(filename);
+			clink.setType(ContentType.valueOf(type));
+		}else {
+			clink = new ContentLink(linkId, filename, path, ContentType.valueOf(type));
+		}
+		clRepository.save(clink);
+		resultMessage.put("success", "Content linked.");
+		return resultMessage;
+		
 	}
 
 

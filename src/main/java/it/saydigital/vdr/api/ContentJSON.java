@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ContentJSON {
 	
-	private Long id;
+	private String id;
 	private String type;
 	private String name;
 	private String contentId;
@@ -12,12 +12,12 @@ public class ContentJSON {
 
 	
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

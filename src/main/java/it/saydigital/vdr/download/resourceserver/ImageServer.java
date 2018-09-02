@@ -23,7 +23,7 @@ public class ImageServer implements ResourceServer{
 	public byte[] serveResource(Content content, String text) throws DocumentException, IOException {
 		ContentLink contentLink = content.getContent();
 		String resourcePath = contentLink.getPath();
-		if (resourcePath == null)
+		if (resourcePath == null || resourcePath.length()<=0)
 			resourcePath = EnvHandler.getProperty("app.content_folder")+File.separator+"images"+File.separator+contentLink.getFilename();
 		this.extension = FilenameUtils.getExtension(resourcePath);
 		String wateredFilePath = Watermarker.applyWatermarkToImage(resourcePath, text);

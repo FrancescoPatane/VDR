@@ -3,6 +3,8 @@ package it.saydigital.vdr.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,8 +49,33 @@ public class RestInterfaceController {
 
 
 	@PostMapping("/api/authorization")
-	public String authorize(@RequestBody Map<String, String> payload) {
-		return apiImpl.createAuthorization(payload);
+	public Map<String, Object> authorize(@RequestBody Map<String, String> payload, HttpServletResponse response) {
+		Map<String, Object> result =  apiImpl.createAuthorization(payload);
+		if (result.containsKey("statusCode")) {
+			this.assignSatusCode(response, result);
+		}
+		return result;
 	}
+
+	@PostMapping("/api/linkcontent")
+	public Map<String, Object> linkContent (@RequestBody Map<String, String> payload, HttpServletResponse response) {
+		Map<String, Object> result =  apiImpl.linkContent(payload);
+		if (result.containsKey("statusCode")) {
+			this.assignSatusCode(response, result);
+		}
+		return result;
+	}
+
+	private void assignSatusCode (HttpServletResponse response, Map<String, Object> result) {
+
+		Object status =  result.get("statusCode");
+		if (status instanceof Integer) {
+			int statusCode = (int) status;
+			response.setStatus(statusCode);
+		}
+	}
+
+
+
 
 }

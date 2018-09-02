@@ -19,7 +19,7 @@ public class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long originId;
+	private String originId;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mkt_entity_id")
 	private MarketingEntity mktEntity;
@@ -41,10 +41,10 @@ public class Content {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getOriginId() {
+	public String getOriginId() {
 		return originId;
 	}
-	public void setOriginId(Long originId) {
+	public void setOriginId(String originId) {
 		this.originId = originId;
 	}
 //	public Long getMktEntityId() {
