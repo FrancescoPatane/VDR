@@ -2,13 +2,12 @@ package it.saydigital.vdr.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import it.saydigital.vdr.model.Authorization;
 import it.saydigital.vdr.model.Content;
@@ -23,7 +22,7 @@ import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
 
-@Component
+@Service
 public class MktApiImpl {
 
 	@Autowired

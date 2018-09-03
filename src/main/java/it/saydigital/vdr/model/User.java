@@ -49,6 +49,20 @@ public class User {
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
     private Set<Role> roles;
+    
+    
+
+	public User() {
+		super();
+	}
+
+	public User(@NotNull String email, @NotNull String password) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.enabled = true;
+		this.roles = new HashSet<>();
+	}
 
 	public Long getId() {
 		return id;

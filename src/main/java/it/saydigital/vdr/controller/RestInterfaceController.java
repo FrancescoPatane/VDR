@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.saydigital.vdr.api.MarketingEntityJSON;
 import it.saydigital.vdr.api.MktApiImpl;
+import it.saydigital.vdr.api.UserApiImpl;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 
 @RestController
 public class RestInterfaceController {
 
-	@Autowired
-	private MarketingEntityRepository mktRepository;
+
 
 	@Autowired
 	private MktApiImpl apiImpl;
+	
+	@Autowired
+	private UserApiImpl usrApiImpl;
 
 	@GetMapping("/api/testconn")
 	public String testConnection() {
 		return "VDR Reached!";
 	}
 
-	@GetMapping("/api/mktentity/{id}")
-	public MarketingEntity getMketEntity(@PathVariable Long id) {
-		return mktRepository.findById(id).get();
-	}
+
 
 	@PostMapping("/api/mktentity")
 	public List<String> createMktEntity(@RequestBody MarketingEntityJSON payload) {
@@ -57,7 +57,7 @@ public class RestInterfaceController {
 		return result;
 	}
 
-	@PostMapping("/api/linkcontent")
+	@PostMapping("/api/contentlink")
 	public Map<String, Object> linkContent (@RequestBody Map<String, String> payload, HttpServletResponse response) {
 		Map<String, Object> result =  apiImpl.linkContent(payload);
 		if (result.containsKey("statusCode")) {
@@ -73,6 +73,15 @@ public class RestInterfaceController {
 			int statusCode = (int) status;
 			response.setStatus(statusCode);
 		}
+	}
+	
+	@PostMapping("/api/user")
+	public Map<String, Object> createUser(@RequestBody Map<String, String> payload, HttpServletResponse response) {
+		Map<String, Object> result =  usrApiImpl.createUser(payload);
+		if (result.containsKey("statusCode")) {
+			this.assignSatusCode(response, result);
+		}
+		return result;
 	}
 
 
