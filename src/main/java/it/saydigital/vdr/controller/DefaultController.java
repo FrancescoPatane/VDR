@@ -113,6 +113,11 @@ public class DefaultController {
 			byte [] bytes = server.serveResource(content, email);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.parseMediaType(server.getMimetype()));
+			if (content.getType().toString().equalsIgnoreCase("FOLDER")) {
+				String filename = content.getName()+".zip";
+				headers.add("content-disposition", "attachment; filename=" + filename);
+
+			}
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
 			return response;
 		}else {

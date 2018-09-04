@@ -40,10 +40,14 @@ public class Watermarker {
 
 	private static final DateTimeFormatter formatter =  DateTimeFormatter.ISO_LOCAL_DATE;
 
-	public static String applyWatermarkToPdf(String filePath, String text) throws DocumentException, IOException {
+	public static String applyWatermarkToPdf(String filePath, String text, String path) throws DocumentException, IOException {
 		LocalDateTime now = LocalDateTime.now();
 
-		String pathOfWateredFile = "temp"+File.separator+System.currentTimeMillis()+"_text_watermarked.pdf";
+		String pathOfWateredFile = null;
+		if (path == null)
+			pathOfWateredFile = "temp"+File.separator+System.currentTimeMillis()+"_text_watermarked.pdf";
+		else
+			pathOfWateredFile = path;
 
 		PdfReader reader = new PdfReader(filePath);
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(pathOfWateredFile));

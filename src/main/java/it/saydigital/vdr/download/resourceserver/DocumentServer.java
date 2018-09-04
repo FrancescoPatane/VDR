@@ -23,8 +23,8 @@ public class DocumentServer implements ResourceServer{
 		ContentLink contentLink = content.getContent();
 		String resourcePath = contentLink.getPath();
 		if (resourcePath == null || resourcePath.length()<=0)
-			resourcePath = EnvHandler.getProperty("app.content_folder")+File.separator+"documents"+File.separator+contentLink.getFilename();
-		String wateredFilePath = Watermarker.applyWatermarkToPdf(resourcePath, text);
+			resourcePath = EnvHandler.getProperty("app.content_documents_folder")+File.separator+contentLink.getFilename();
+		String wateredFilePath = Watermarker.applyWatermarkToPdf(resourcePath, text, null);
 		Path path = Paths.get(wateredFilePath);
 		byte[] bytes = null;
 		bytes = Files.readAllBytes(path);
