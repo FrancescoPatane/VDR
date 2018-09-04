@@ -33,14 +33,14 @@
 			
 			<img th:if="${entity.getCoverLink() == null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
 			
-			<img th:unless="${entity.getCoverLink() == null}" th:src="@{'/images/' + ${entity.getCoverLink().filename}}" height="80" width="100"></img>
+			<img th:unless="${entity.getCoverLink() == null}" th:src="@{${entity.getCoverLink().filename}}" height="80" width="100"></img>
 
 			</a>
 			</div>
 			<div class="col-4"><p th:text="${entity.name}"></p></div>
 			<div class="col"><span class="badge badge-secondary" th:text="${entity.getNumberOfAssets()}"></span></div>
 			<div class="col">
-			<img th:if="${entity.getCompanyImageName() != null}" th:src="@{'/icons/'+${entity.getCompanyImageName()}}" height="80" width="100"></img>
+			<img th:if="${entity.getCompanyImageName() != null}" th:src="@{${entity.getCompanyImageName()}}" height="80" width="100"></img>
 			<img th:unless="${entity.getCompanyImageName() != null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
 			</div>
 
