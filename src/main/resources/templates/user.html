@@ -9,6 +9,11 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+	<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+	crossorigin="anonymous">
+	
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/user.css}" />
 
@@ -24,6 +29,18 @@
 	</section>
 
 	<br>
+	
+<!-- 	<div id="filterContainer"> -->
+<!-- 		<input type="text" id="filter" onkeyup="filter()" placeholder="Search..."> -->
+<!-- 	</div> -->
+
+<div class="input-group mb-3 " id="filterContainer">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+  </div>
+  <input type="text" id="nameInput" class="form-control" placeholder="Search..." onkeyup="filter()" aria-label="Search" aria-describedby="basic-addon1">
+</div>
+
 
 	<div class="listContainer">
 
@@ -37,7 +54,7 @@
 
 			</a>
 			</div>
-			<div class="col-4"><p th:text="${entity.name}"></p></div>
+			<div class="col-4"><p id="entityName" th:text="${entity.name}"></p></div>
 			<div class="col"><span class="badge badge-secondary" th:text="${entity.getNumberOfAssets()}"></span></div>
 			<div class="col">
 			<img th:if="${entity.getCompanyImageName() != null}" th:src="@{${entity.getCompanyImageName()}}" height="80" width="100"></img>
@@ -51,6 +68,9 @@
 
 
 	<div th:replace="fragments/footer :: scripts"></div>
+	
+	<script type="text/javascript"
+			th:src="@{/js/user.js}"></script>
 
 
 </body>

@@ -41,7 +41,10 @@
 
 		<h1>Virtual Data Room</h1>
 		<br>
-		<a class="btn btn-primary btn-lg scroller" href="#loginForm"role="button">Access</a>
+		
+		<a sec:authorize="isAnonymous()" class="btn btn-primary btn-lg scroller" href="#loginForm"role="button">Access</a>
+		
+		<a sec:authorize="isAuthenticated()" class="btn btn-primary btn-lg scroller" th:href="@{/user}"role="button">Access</a>
 		
 	</div>
 
