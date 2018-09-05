@@ -11,9 +11,18 @@
 	height: 450px;
 }
 
+#introSection{
+	margin-bottom: 25px;
+}
+
 #description {
 	text-align: center;
 }
+
+#docsTitle{
+	margin-left: 4rem;
+}
+
 
 #docTree {
 	min-height: 250px;
@@ -23,7 +32,11 @@
 	position: fixed;
 	width: 25%;
 	top: 60%;
-/* 	display:none; */
+	right: inherit;
+    padding: 1rem;
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 0.5rem;
+    min-height: 7rem;
 }
 
 #download {
@@ -32,4 +45,14 @@
 
 li .icon {
 	margin-right: 25px !important;
+}
+
+.modal-content{
+    background: rgba(0,0,0,0.6);
+    color: white;
+}
+
+
+#commForm, .modalButton{
+	text-align: center;
 }

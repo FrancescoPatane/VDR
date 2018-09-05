@@ -42,7 +42,7 @@
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
-					 <img th:src="@{${image.filename}}">
+					<img th:src="@{${image.filename}}">
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
@@ -75,7 +75,10 @@
 		</div>
 	</div>
 	<input type="hidden" id="doctree" th:value="${docTree}" />
+	
+	<p id="docsTitle">Documents</p>
 	<hr id="startDocs">
+	
 	<br>
 	<div class="container" id="docSection">
 		<div class="row">
@@ -108,6 +111,54 @@
 	<br>
 	<br>
 	<br>
+
+
+	<!-- Button trigger modal -->
+	<div class="modalButton">
+	<button type="button" class="btn btn-secondary" data-toggle="modal"
+		data-target="#exampleModalCenter">Communications</button>
+</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Send
+						Communication</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+
+					<form action="#" id="commForm">
+						<div class="form-group">
+							<label for="email">Reference Asset:</label> <input type="email"
+								class="form-control" id="asset">
+						</div>
+						<div class="form-group">
+							<label for="pwd">Message:</label>
+							<textarea class="form-control" id="message"></textarea>
+						</div>
+						<button type="submit" class="btn btn-primary">Send</button>
+					</form>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 	<br>
 	<br>
 	<br>
