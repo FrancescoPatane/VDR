@@ -6,8 +6,8 @@
 </head>
 <body>
 
-
-	<nav class="navbar fixed-top navbar-expand-sm bg-dark navbar-dark" th:fragment="navbar">
+<div id="navContainer" th:fragment="navbar">
+	<nav class="navbar fixed-top navbar-expand-sm bg-dark navbar-dark">
 <!-- 		<a href="/home"> -->
 <!-- 			<img class="navbar-brand" th:src="@{img/logoadb.png}"> -->
   <a class="navbar-brand" th:href="@{/home}">VDR</a>
@@ -20,21 +20,63 @@
 			<li class="dropdown order-1">
 				<button type="button" id="dropdownMenu1" data-toggle="dropdown"
 					class="btn btn-outline-secondary dropdown-toggle" sec:authentication="name">
-					 <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right mt-2">
 					<li class="px-3 py-2">
 					<form class="dropdown-item" th:action="@{/logout}" method="post">
-						<input id="signOut" type="submit" class="btn btn-link"
-							value="Sign Out" />
+					<i class="fas fa-sign-out-alt"></i>
+						<input type="submit" class="btn btn-link" value="Sign Out" />
 					</form>
-
+					</li>
+					<li class="px-3 py-2">
+<!-- 					<input class="btn btn-link" id="changePassword" type="button" value="Password"> -->
+					    <i class="fas fa-key dropdown-item"><button class="btn btn-link" data-toggle="modal"
+		data-target="#changePswModal">Password</button></i>
+					
 					</li>
 				</ul>
 			</li>
 		</ul>
 	</nav>
+	
+	
+		<!-- Modal -->
+	<div class="modal fade" id="changePswModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Change Password</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
 
+
+					<form action="#" id="commForm">
+						<div class="form-group">
+							<label for="psw1">New Password:</label> 
+							<input type="text" class="form-control" id="psw1">
+						</div>
+						<div class="form-group">
+							<label for="psw2">Repeat Password:</label>
+							<input type="text" class="form-control" id="psw2">
+						</div>
+						<button type="submit" class="btn btn-primary">Send</button>
+					</form>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
