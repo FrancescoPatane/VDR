@@ -32,6 +32,7 @@ import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
+import it.saydigital.vdr.security.PermissionChecker;
 import it.saydigital.vdr.tree.TreeManager;
 import it.saydigital.vdr.watermark.Watermarker;
 
@@ -51,7 +52,10 @@ public class DefaultController {
 	private TreeManager treeManager;
 
 	@Autowired
-	ResourceServerFactory serverFactory;
+	private ResourceServerFactory serverFactory;
+
+	@Autowired
+	private PermissionChecker permChecker;
 
 	@GetMapping(value = { "/", "/home" })
 	public String home() {
@@ -65,7 +69,7 @@ public class DefaultController {
 	}
 
 	@GetMapping("/403")
-	public String error403() {
+	public String getError403() {
 		return "/error/403";
 	}
 
@@ -82,20 +86,25 @@ public class DefaultController {
 	// so that users can't guess other entities
 
 	@GetMapping("/detail")
-	public String entityDetails(Model uiModel, @RequestParam("entityName") String entityName) throws JsonProcessingException {
+	public String getEntityDetailsPage(Model uiModel, @RequestParam("entityName") String entityName) throws JsonProcessingException {
 		MarketingEntity mktEntity = mktRepository.findByName(entityName);
-		long entityId = mktEntity.getId();
-		List<ContentLink> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
-		ContentLink firstImage = null;
-		if (sliderImages.size()>0) {
-			firstImage = sliderImages.get(0);
-			sliderImages.remove(0);
+		User user = getUser(this.getAuthentication().getName());
+		if (permChecker.hasPermissionForObject(user, mktEntity)) {
+			long entityId = mktEntity.getId();
+			List<ContentLink> sliderImages = contentRepository.findSliderImagesByEntityId(entityId);
+			ContentLink firstImage = null;
+			if (sliderImages.size()>0) {
+				firstImage = sliderImages.get(0);
+				sliderImages.remove(0);
+			}
+			uiModel.addAttribute("entity", mktEntity);
+			uiModel.addAttribute("firstImage", firstImage);
+			uiModel.addAttribute("sliderImages", sliderImages);
+			uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
+			return "/detail";
+		}else {
+			return "/error/403";
 		}
-		uiModel.addAttribute("entity", mktEntity);
-		uiModel.addAttribute("firstImage", firstImage);
-		uiModel.addAttribute("sliderImages", sliderImages);
-		uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
-		return "/detail";
 	}
 
 
@@ -105,9 +114,10 @@ public class DefaultController {
 
 	@GetMapping("/download")
 	public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException, DocumentException {
-		String email = this.getAuthentication().getName();
+		User user = getUser(this.getAuthentication().getName());
+		String email = user.getEmail();
 		Optional<Content> optContent = contentRepository.findById(contentId);
-		if (optContent.isPresent()) {
+		if (optContent.isPresent() && permChecker.hasPermissionForObject(user,  optContent.get())) {
 			Content content = optContent.get();
 			ResourceServer server = serverFactory.createResourceServer(content);
 			byte [] bytes = server.serveResource(content, email);
@@ -116,7 +126,6 @@ public class DefaultController {
 			if (content.getType().toString().equalsIgnoreCase("FOLDER")) {
 				String filename = content.getName()+".zip";
 				headers.add("content-disposition", "attachment; filename=" + filename);
-
 			}
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
 			return response;
@@ -124,12 +133,12 @@ public class DefaultController {
 			return null;
 		}
 	}
-	
+
 	private Authentication getAuthentication() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth;
 	}
-	
+
 
 
 

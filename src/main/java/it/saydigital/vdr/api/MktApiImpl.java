@@ -40,7 +40,8 @@ public class MktApiImpl {
 	@Autowired
 	private UserRepository userRepository;
 
-	public List<String> createMktEntity(MarketingEntityJSON mktJSON) {
+	public Map<String, Object> createMktEntity(MarketingEntityJSON mktJSON) {
+		Map<String, Object> resultMessage = new HashMap<>();
 		MarketingEntity newEntity = new MarketingEntity();
 		newEntity.setOriginId(mktJSON.getId());
 		newEntity.setName(mktJSON.getName());
@@ -53,7 +54,9 @@ public class MktApiImpl {
 		newEntity = mktRepository.save(newEntity);
 		List<String> missingcontents = new ArrayList<>();
 		this.createContents(missingcontents, mktJSON.getContents(), newEntity);
-		return missingcontents;
+		resultMessage.put("success", "Marketing Entity " + newEntity.getName() + " created.");
+		resultMessage.put("missingcontents", missingcontents);
+		return resultMessage;
 	}
 
 	private void createContents(List<String> missingcontents, List<ContentJSON> contentsJSON, MarketingEntity newEntity) {
@@ -87,7 +90,7 @@ public class MktApiImpl {
 	 *  if content link does not already exists, we'll create an empty one to fill later.
 	 */
 
-	public ContentLink getCLIfExistsOrCreateEmpty(List<String> missingcontents, String contentId) {
+	private ContentLink getCLIfExistsOrCreateEmpty(List<String> missingcontents, String contentId) {
 		ContentLink clink;
 		if (clRepository.existsById(contentId)) {
 			clink = clRepository.findById(contentId).get();
@@ -103,8 +106,18 @@ public class MktApiImpl {
 	}
 
 
-	public void deleteMktEntity(Long id) {
-		mktRepository.deleteById(id);
+	public Map<String, Object> deleteMktEntity(String id) {
+		Map<String, Object> resultMessage = new HashMap<>();
+		MarketingEntity targetEntity = mktRepository.findByOriginId(id);
+		if(targetEntity == null) {
+			resultMessage.put("error", "Could not find any entity matching the id in input.");
+			resultMessage.put("statusCode", 404);
+		}else {
+			mktRepository.delete(targetEntity);
+			resultMessage.put("success", "Marketing Entity " + targetEntity.getName() + " deleted.");
+		}
+		return resultMessage;
+
 	}
 
 	public Map<String, Object> createAuthorization(Map<String, String> payload) {
@@ -143,11 +156,7 @@ public class MktApiImpl {
 				resultMessage.put("error", "Invalid type of authorization");
 				resultMessage.put("statusCode", 400);
 			}
-
 		}
-
-
-
 		return resultMessage;
 	}
 
@@ -170,7 +179,7 @@ public class MktApiImpl {
 		clRepository.save(clink);
 		resultMessage.put("success", "Content linked.");
 		return resultMessage;
-		
+
 	}
 
 

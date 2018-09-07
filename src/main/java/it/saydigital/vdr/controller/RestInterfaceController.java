@@ -1,5 +1,6 @@
 package it.saydigital.vdr.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +27,11 @@ public class RestInterfaceController {
 
 	@Autowired
 	private MktApiImpl apiImpl;
-	
+
 	@Autowired
 	private UserApiImpl usrApiImpl;
+	
+	
 
 	@GetMapping("/api/testconn")
 	public String testConnection() {
@@ -36,54 +39,91 @@ public class RestInterfaceController {
 	}
 
 
-
 	@PostMapping("/api/mktentity")
-	public List<String> createMktEntity(@RequestBody MarketingEntityJSON payload) {
-		return apiImpl.createMktEntity(payload);
+	public Map<String, Object> createMktEntity(@RequestBody MarketingEntityJSON payload, HttpServletResponse response) {
+		Map<String, Object> result = apiImpl.createMktEntity(payload);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			} 
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
+		}
 	}
 
 	@DeleteMapping("/api/mktentity/{id}")
-	public void deleteMktEntity(@PathVariable Long id) {
-		apiImpl.deleteMktEntity(id);
+	public Map<String, Object> deleteMktEntity(@PathVariable String originId, HttpServletResponse response) {
+		Map<String, Object> result = apiImpl.deleteMktEntity(originId);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			} 
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
+		}
 	}
 
 
 	@PostMapping("/api/authorization")
 	public Map<String, Object> authorize(@RequestBody Map<String, String> payload, HttpServletResponse response) {
 		Map<String, Object> result =  apiImpl.createAuthorization(payload);
-		if (result.containsKey("statusCode")) {
-			this.assignSatusCode(response, result);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
 		}
-		return result;
 	}
 
 	@PostMapping("/api/contentlink")
 	public Map<String, Object> linkContent (@RequestBody Map<String, String> payload, HttpServletResponse response) {
 		Map<String, Object> result =  apiImpl.linkContent(payload);
-		if (result.containsKey("statusCode")) {
-			this.assignSatusCode(response, result);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
 		}
-		return result;
+
 	}
 
 	private void assignSatusCode (HttpServletResponse response, Map<String, Object> result) {
 
 		Object status =  result.get("statusCode");
-		if (status instanceof Integer) {
-			int statusCode = (int) status;
-			response.setStatus(statusCode);
-		}
+		int statusCode = (int) status;
+		response.setStatus(statusCode);
 	}
-	
+
 	@PostMapping("/api/user")
 	public Map<String, Object> createUser(@RequestBody Map<String, String> payload, HttpServletResponse response) {
 		Map<String, Object> result =  usrApiImpl.createUser(payload);
-		if (result.containsKey("statusCode")) {
-			this.assignSatusCode(response, result);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
 		}
-		return result;
 	}
 
+	private Map<String, Object> returnServerError(String exceptionMessage){
+		Map<String, Object> resultMessage = new HashMap<>();
+		resultMessage.put("error", exceptionMessage);
+		resultMessage.put("statusCode", 500);
+		return resultMessage;
+	}
 
 
 
