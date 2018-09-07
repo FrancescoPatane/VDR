@@ -17,9 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itextpdf.text.DocumentException;
 
@@ -32,6 +35,7 @@ import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
+import it.saydigital.vdr.security.PasswordUtilities;
 import it.saydigital.vdr.security.PermissionChecker;
 import it.saydigital.vdr.tree.TreeManager;
 import it.saydigital.vdr.watermark.Watermarker;
@@ -56,6 +60,11 @@ public class DefaultController {
 
 	@Autowired
 	private PermissionChecker permChecker;
+	
+	@Autowired
+	private PasswordUtilities pswUtils;
+	
+	
 
 	@GetMapping(value = { "/", "/home" })
 	public String home() {
@@ -133,6 +142,16 @@ public class DefaultController {
 			return null;
 		}
 	}
+	
+	
+	@ResponseBody
+	@PostMapping("/ajax/changePsw")
+	public void changePassword(@RequestParam("newPsw") String newPsw) {
+		User user = getUser(this.getAuthentication().getName());
+		pswUtils.changePsw(newPsw, user, userRepository);
+	}
+	
+	
 
 	private Authentication getAuthentication() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

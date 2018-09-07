@@ -37,17 +37,18 @@ public class ImageServer implements ResourceServer{
 	@Override
 	public String getMimetype() {
 		String mimeType = "";
-		switch (this.extension) {
-		case "jpeg":
-		case "jpg":  
-			mimeType = "image/jpeg";
-			break;
-		case "png":  
-			mimeType = "image/png";
-		case "gif":  
-			mimeType = "image/gif";
-			break;
-		}
+		switch (this.extension.toLowerCase()) {
+			case "jpeg":
+			case "jpg":  
+				mimeType = "image/jpeg";
+				break;
+			case "png":  
+				mimeType = "image/png";
+				break;
+			case "gif":  
+				mimeType = "image/gif";
+				break;
+			}
 		return mimeType;
 	}
 

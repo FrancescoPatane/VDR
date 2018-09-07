@@ -11,6 +11,7 @@ import it.saydigital.vdr.model.Role;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.RoleRepository;
 import it.saydigital.vdr.repository.UserRepository;
+import it.saydigital.vdr.security.PasswordUtilities;
 
 @Service
 public class UserApiImpl {
@@ -22,7 +23,7 @@ public class UserApiImpl {
 	private RoleRepository roleRepository;
 
 	@Autowired
-	private BCryptPasswordEncoder pswEncoder;
+	private PasswordUtilities pswUtils;
 
 
 
@@ -40,8 +41,7 @@ public class UserApiImpl {
 				resultMessage.put("error", "Could not find any role matching the role in input: " + roleName);
 				resultMessage.put("statusCode", 400);
 			}else {
-				String pswd = "asd11";//PasswordGenerator.getRandomPassword();
-				String encodedPswd = pswEncoder.encode(pswd);
+				String encodedPswd = pswUtils.getRandomPassword();
 				user = new User(email, encodedPswd);
 				user.getRoles().add(role);
 				usrRepository.save(user);
