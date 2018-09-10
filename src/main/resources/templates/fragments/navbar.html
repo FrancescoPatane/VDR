@@ -52,27 +52,24 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
+				<form id="pswForm" th:action="@{/ajax/changePsw}" method="post">
 				<div class="modal-body">
-
-
-					<form action="#" id="commForm">
 						<div class="form-group">
+						<div id=errPsw class="alert alert-danger" role="alert" style="display: none">Couldn't change password.</div>
+						<div id=diffPsw class="alert alert-danger" role="alert" style="display: none">Insert the same passord in both field.</div>
+						<div id="succPsw" class="alert alert-success" role="alert" style="display: none">Password changed.</div>
 							<label for="psw1">New Password:</label> 
-							<input type="text" class="form-control" id="psw1">
+							<input type="password" class="form-control" id="psw1" required>
 						</div>
 						<div class="form-group">
 							<label for="psw2">Repeat Password:</label>
-							<input type="text" class="form-control" id="psw2">
+							<input type="password" class="form-control" id="psw2" required>
 						</div>
-						<button type="submit" class="btn btn-primary">Send</button>
-					</form>
-
-
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">Close</button>
+					<button id="pswButton" type="submit" class="btn btn-primary">Send</button>
 				</div>
+				</form>
 			</div>
 		</div>
 	</div>

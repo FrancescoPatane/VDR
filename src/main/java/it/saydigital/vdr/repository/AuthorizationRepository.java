@@ -11,7 +11,7 @@ import it.saydigital.vdr.model.id.AuthorizationId;
 
 public interface AuthorizationRepository extends JpaRepository<Authorization, AuthorizationId>{
 	
-	 @Query("SELECT a.AuthorizationId.mktEntityId FROM Authorization a WHERE a.AuthorizationId.userId = ?1") 
+	 @Query("SELECT a.id.mktEntityId FROM Authorization a WHERE a.id.userId = ?1") 
 	 List<Long> findAuthorizationsForUser(Long userId);
 
 }

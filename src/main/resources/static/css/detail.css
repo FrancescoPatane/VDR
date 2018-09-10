@@ -47,11 +47,6 @@ li .icon {
 	margin-right: 25px !important;
 }
 
-.modal-content{
-    background: rgba(0,0,0,0.6);
-    color: white;
-}
-
 
 #commForm, .modalButton{
 	text-align: center;
