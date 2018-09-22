@@ -1,5 +1,9 @@
 package it.saydigital.vdr.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,8 +13,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.io.FilenameUtils;
 
 import it.saydigital.vdr.model.enumeration.ContentType;
+import it.saydigital.vdr.util.EnvHandler;
 
 @Entity
 public class ContentLink {
@@ -103,7 +111,23 @@ public class ContentLink {
 	
 	
 
+	public String getBase64 () {
+		String base64 = "";
+		String resourcePath = this.path;
+		if (resourcePath == null || resourcePath.length()<=0)
+			resourcePath = EnvHandler.getProperty("app.content_images_folder")+File.separator+this.getFilename();
+		try {
+			base64 = DatatypeConverter.printBase64Binary(Files.readAllBytes(Paths.get(resourcePath)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return base64;
+	}
 	
+	public String getExtension() {
+		return FilenameUtils.getExtension(this.filename);
+	}
 	
 
 

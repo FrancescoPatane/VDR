@@ -9,7 +9,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-<link rel="stylesheet"
+<link rel="stylesheet" 
 	href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
 	crossorigin="anonymous">
@@ -36,13 +36,15 @@
 			</ul>
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img th:src="@{${firstImage.filename}}">
+<!-- 					<img th:src="@{${firstImage.filename}}"> -->
+<img th:src="'data:image/' + ${firstImage.getExtension()} + ';base64, '+ ${firstImage.getBase64()}" />
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
-					<img th:src="@{${image.filename}}">
+<!-- 					<img th:src="@{${image.filename}}"> -->
+<img th:src="'data:image/' + ${image.getExtension()} + ';base64, ' + ${image.getBase64()}" />
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
@@ -75,8 +77,22 @@
 	</div>
 	<input type="hidden" id="doctree" th:value="${docTree}" />
 	
-	<p id="docsTitle">Documents</p>
+	<br>
+	
+	
+<div class="container-fluid" id="sectionHeader">
+<div class="row">
+<div class="col">
+<p id="docsTitle">Documents</p>
+</div>
+<div class="col offset-sm-8">
+	<button type="button" class="btn btn-secondary">Full download<i class="fas fa-download"></i></button>
+	</div>
+	
+	</div>
 	<hr id="startDocs">
+	</div>
+	
 	
 	<br>
 	<div class="container" id="docSection">
@@ -88,9 +104,9 @@
 				<div id="downloadPanel">
 					<h5>_____</h5>
 					<div id="download">
-						<i aria-hidden="true"></i>
+						<i id="fileIcon"></i>
 						<button type="button" class="btn btn-secondary float-right"
-							onclick="download()">Download</button>
+							onclick="download()"><i class="fas fa-download fa-2x"></i></button>
 					</div>
 				</div>
 			</div>

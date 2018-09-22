@@ -65,8 +65,8 @@ function setUpTree(){
 			$("#downloadPanel h5").html(node.text);
 			$("#selectedNode").val(node.id);
 			var icon = selectIconClass(node.type);
-			$("#download i").removeClass();
-			$("#download i").addClass(icon);
+			$("#download #fileIcon").removeClass();
+			$("#download #fileIcon").addClass(icon);
 		},
 		data : $("#doctree").val()
 	});
