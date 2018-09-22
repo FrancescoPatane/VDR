@@ -1,5 +1,9 @@
 package it.saydigital.vdr.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -15,36 +19,39 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.xml.bind.DatatypeConverter;
+
+import it.saydigital.vdr.util.EnvHandler;
 
 @Entity
 public class MarketingEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique=true)
-    private String originId;
-    @Column(unique=true)
-    private String name;
-    @Column(length = 500)
-    private String description;
-    private String transactionManager;
-    private String company;
-    private String tmEmail;
-    private LocalDateTime creationDate;
-    private Boolean isLocked;
-//    @ManyToMany
-//    @JoinTable( 
-//        joinColumns = @JoinColumn(
-//          name = "mkt_entity_id", referencedColumnName = "id"), 
-//        inverseJoinColumns = @JoinColumn(
-//          name = "user_id", referencedColumnName = "id")) 
-//    private Set<User> users = new HashSet<>();
-    @OneToMany(mappedBy="mktEntity", orphanRemoval = true)
-    private List<Content> contents;
-    @OneToMany(mappedBy="mktEntity", orphanRemoval = true)
-    private List<Authorization> Authorizations;
-    
-    
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(unique=true)
+	private String originId;
+	@Column(unique=true)
+	private String name;
+	@Column(length = 500)
+	private String description;
+	private String transactionManager;
+	private String company;
+	private String tmEmail;
+	private LocalDateTime creationDate;
+	private Boolean isLocked;
+	//    @ManyToMany
+	//    @JoinTable( 
+	//        joinColumns = @JoinColumn(
+	//          name = "mkt_entity_id", referencedColumnName = "id"), 
+	//        inverseJoinColumns = @JoinColumn(
+	//          name = "user_id", referencedColumnName = "id")) 
+	//    private Set<User> users = new HashSet<>();
+	@OneToMany(mappedBy="mktEntity", orphanRemoval = true)
+	private List<Content> contents;
+	@OneToMany(mappedBy="mktEntity", orphanRemoval = true)
+	private List<Authorization> Authorizations;
+
+
 	public Long getId() {
 		return id;
 	}
@@ -82,12 +89,12 @@ public class MarketingEntity {
 		this.isLocked = isLocked;
 	}
 
-//	public Set<User> getUsers() {
-//		return users;
-//	}
-//	public void setUsers(Set<User> users) {
-//		this.users = users;
-//	}
+	//	public Set<User> getUsers() {
+	//		return users;
+	//	}
+	//	public void setUsers(Set<User> users) {
+	//		this.users = users;
+	//	}
 	public String getCompany() {
 		return company;
 	}
@@ -100,30 +107,44 @@ public class MarketingEntity {
 	public void setContents(List<Content> contents) {
 		this.contents = contents;
 	}
-	
-	
+
+
 	public String getOriginId() {
 		return originId;
 	}
 	public void setOriginId(String originId) {
 		this.originId = originId;
 	}
-	
+
 	public LocalDateTime getCreationDate() {
 		return creationDate;
 	}
 	public void setCreationDate(LocalDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
-	
-	
-	public String getCompanyImageName () {
+
+	public String getCompanyImage() {
+		String base64 = null;
+		if (this.company != null && this.company.length()>0) {
+			String resourcePath = EnvHandler.getProperty("app.company_icons_folder")+File.separator+this.getCompanyImageName();
+			try {
+				base64 = DatatypeConverter.printBase64Binary(Files.readAllBytes(Paths.get(resourcePath)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return base64;
+	}
+
+
+	private String getCompanyImageName () {
 		if (this.company != null && this.company.length()>0)
 			return this.company.replaceAll("[^a-zA-Z]| +","")+".png".toLowerCase();
 		else
-			return null;
+			return "";
 	}
-	
+
 	public ContentLink  getCoverLink() {
 		for (Content content: this.contents) {
 			if (content.getType().toString().equals("COVER_IMAGE"))
@@ -131,7 +152,7 @@ public class MarketingEntity {
 		}
 		return null;
 	}
-	
+
 	public int getNumberOfAssets() {
 		int c = 0;
 		for (Content content : contents) {
@@ -140,6 +161,6 @@ public class MarketingEntity {
 		}
 		return c;
 	}
-    
+
 
 }

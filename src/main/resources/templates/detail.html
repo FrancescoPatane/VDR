@@ -36,15 +36,13 @@
 			</ul>
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-<!-- 					<img th:src="@{${firstImage.filename}}"> -->
-<img th:src="'data:image/' + ${firstImage.getExtension()} + ';base64, '+ ${firstImage.getBase64()}" />
+						<img th:src="'data:image/' + ${firstImage.getExtension()} + ';base64, '+ ${firstImage.getBase64()}" />
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
 				</div>
 				<div class="carousel-item" th:each="image : ${sliderImages}">
-<!-- 					<img th:src="@{${image.filename}}"> -->
-<img th:src="'data:image/' + ${image.getExtension()} + ';base64, ' + ${image.getBase64()}" />
+					<img th:src="'data:image/' + ${image.getExtension()} + ';base64, ' + ${image.getBase64()}" />
 					<div class="carousel-caption">
 						<h1 th:text="${entity.name}"></h1>
 					</div>
@@ -70,7 +68,7 @@
 				<h3 th:text="${entity.description}"></h3>
 			</div>
 			<div class="col-sm-3">
-				<img class="float-right" th:src="@{${entity.getCompanyImageName()}}"
+				<img class="float-right" th:src="'data:image/png;base64, ' + ${entity.getCompanyImage()}"
 					height="80" width="100"></img>
 			</div>
 		</div>

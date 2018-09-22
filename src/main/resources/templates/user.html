@@ -50,15 +50,14 @@
 			
 			<img th:if="${entity.getCoverLink() == null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
 			
-			<img th:unless="${entity.getCoverLink() == null}" th:src="@{${entity.getCoverLink().filename}}" height="80" width="100"></img>
-
+			<img th:unless="${entity.getCoverLink() == null}" th:src="'data:image/' + ${entity.getCoverLink().getExtension()} + ';base64, ' +${entity.getCoverLink().getBase64()}" height="80" width="100"></img>
 			</a>
 			</div>
 			<div class="col-4"><p id="entityName" th:text="${entity.name}"></p></div>
 			<div class="col"><span class="badge badge-secondary" th:text="${entity.getNumberOfAssets()}"></span></div>
 			<div class="col">
-			<img th:if="${entity.getCompanyImageName() != null}" th:src="@{${entity.getCompanyImageName()}}" height="80" width="100"></img>
-			<img th:unless="${entity.getCompanyImageName() != null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
+			<img th:if="${entity.getCompanyImage() != null}" th:src="'data:image/png;base64, ' + ${entity.getCompanyImage()}" height="80" width="100"></img>
+			<img th:unless="${entity.getCompanyImage() != null}" th:src="@{/img/defaultcover.png}" height="80" width="100"></img>
 			</div>
 
 		</div>
