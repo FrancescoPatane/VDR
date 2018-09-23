@@ -20,6 +20,10 @@ public class FolderServer implements ResourceServer{
 
 	private final String mimeType = "application/zip";
 	private ContentRepository contentRepository;
+	
+	public FolderServer() {
+		
+	}
 
 	public FolderServer(ContentRepository contentRepository) {
 		this.contentRepository = contentRepository;
@@ -64,8 +68,8 @@ public class FolderServer implements ResourceServer{
 	}
 	
 	
-
-	private void addDirToArchive(ZipOutputStream zos, File srcFile, String path) {
+	//used to zip the file from fulldownload
+	public void addDirToArchive(ZipOutputStream zos, File srcFile, String path) {
 		File[] files = srcFile.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			// if the file is directory, use recursion
