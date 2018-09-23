@@ -13,8 +13,9 @@ public class MailTemplate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String subject;
 	@Column(length = 5000)
-	private String text;
+	private String body;
 	private String locale;
 
 
@@ -30,17 +31,23 @@ public class MailTemplate {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
-	}
 	public String getLocale() {
 		return locale;
 	}
 	public void setLocale(String locale) {
 		this.locale = locale;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getBody() {
+		return body;
+	}
+	public void setBody(String body) {
+		this.body = body;
 	}
 	
 	

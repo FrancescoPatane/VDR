@@ -29,6 +29,7 @@ function download(){
 function fullDownload(id){
 //	var token = $("input[name='_csrf']").val();
 //	var header = "X-CSRF-TOKEN";
+	var baseUrl = $('head base')[0].href;
 	$.ajax({
 		type: "GET",
 //		beforeSend: function(request) {
@@ -36,7 +37,7 @@ function fullDownload(id){
 //		},
 		contentType: "application/json",
 		url: "/ajax/fullDonwload",
-		data: {id:id},
+		data: {id:id,baseUrl:baseUrl},
 		cache: false,
 		timeout: 600000,
 		success: function (data) {

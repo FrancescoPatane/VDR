@@ -16,6 +16,7 @@ import com.itextpdf.text.DocumentException;
 import it.saydigital.vdr.download.resourceserver.FolderServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServerFactory;
+import it.saydigital.vdr.mail.MailService;
 import it.saydigital.vdr.model.Content;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
@@ -31,8 +32,11 @@ public class AsyncService {
 	@Autowired
 	private ResourceServerFactory serverFactory;
 	
+	@Autowired
+	private MailService mailService;
+	
 	@Async
-	public void fullDowload(MarketingEntity entity, User user) throws IOException, DocumentException {
+	public void fullDowload(MarketingEntity entity, User user, String baseUrl) throws IOException, DocumentException {
 		
 		String zipFileName = entity.getName()+"_"+user.getId()+"_"+System.currentTimeMillis();
 		String folderToZip = "temp"+File.separator+zipFileName+File.separator;
@@ -49,6 +53,8 @@ public class AsyncService {
 		FolderServer folderServer = new FolderServer();
 		folderServer.addDirToArchive(zos, fileToZip, "");
 		zos.close();
+		
+		mailService.sendMailFullDonwload(baseUrl+"extDocs/"+zipFileName, user);
 	}
 	
 	private void createRoots(String rootPath, String watermark, List<Content> roots) throws IOException, DocumentException {

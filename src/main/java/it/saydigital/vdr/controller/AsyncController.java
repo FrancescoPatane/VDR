@@ -3,16 +3,12 @@ package it.saydigital.vdr.controller;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -43,14 +39,14 @@ public class AsyncController {
 	
 	@ResponseBody
 	@GetMapping("/ajax/fullDonwload")
-	public void fullDonwload(@RequestParam("id") long id) throws IOException, DocumentException  {
+	public void fullDonwload(@RequestParam("id") long id, @RequestParam("baseUrl") String baseUrl) throws IOException, DocumentException  {
 		
 
 		Optional<MarketingEntity> optContent = mktRepository.findById(id);
 		User user = this.getUser(this.getAuthentication().getName());
 		
 		if (optContent.isPresent() && permChecker.hasPermissionForObject(user,  optContent.get())) {
-			asyncService.fullDowload(optContent.get(), user);
+			asyncService.fullDowload(optContent.get(), user, baseUrl);
 		}
 
 		
