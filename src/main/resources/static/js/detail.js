@@ -26,6 +26,30 @@ function download(){
 	window.open(url);
 }
 
+function fullDownload(id){
+//	var token = $("input[name='_csrf']").val();
+//	var header = "X-CSRF-TOKEN";
+	$.ajax({
+		type: "GET",
+//		beforeSend: function(request) {
+//			request.setRequestHeader(header, token);
+//		},
+		contentType: "application/json",
+		url: "/ajax/fullDonwload",
+		data: {id:id},
+		cache: false,
+		timeout: 600000,
+		success: function (data) {
+
+
+		},
+		error: function (e) {
+
+
+		}
+	});
+}
+
 function setUpView(){
 	setUpAnimation();
 	setUpTree();

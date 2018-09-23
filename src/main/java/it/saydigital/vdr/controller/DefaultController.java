@@ -150,7 +150,7 @@ public class DefaultController {
 	@ResponseBody
 	@PostMapping("/ajax/changePsw")
 	public void changePassword(@Valid @RequestBody String newPsw) {
-		User user = getUser(this.getAuthentication().getName());
+		User user = this.getUser(this.getAuthentication().getName());
 		pswUtils.changePsw(newPsw, user, userRepository);
 	}
 	

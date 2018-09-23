@@ -27,7 +27,7 @@ public class FolderServer implements ResourceServer{
 
 	@Override
 	public byte[] serveResource(Content content, String watermark) throws IOException, DocumentException {
-		StringBuilder startFolderPath = new StringBuilder();//
+		StringBuilder startFolderPath = new StringBuilder();
 		startFolderPath.append("temp"+File.separator+watermark+"_"+System.currentTimeMillis()+File.separator);
 		String folderToZip = startFolderPath.toString();
 		File file = new File(startFolderPath.toString());
@@ -43,7 +43,7 @@ public class FolderServer implements ResourceServer{
 		return bytes;
 	}
 
-	private void createFile(Content content, String watermark, StringBuilder path) throws DocumentException, IOException {
+	public void createFile(Content content, String watermark, StringBuilder path) throws DocumentException, IOException {
 		long folderId = content.getId();
 		if (content.getType().toString().equalsIgnoreCase("FOLDER")) {
 			path.append(content.getName());
