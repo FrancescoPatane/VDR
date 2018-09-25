@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
+import javax.mail.MessagingException;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -38,7 +40,7 @@ public class AsyncService {
 	@Async
 	public void fullDowload(MarketingEntity entity, User user, String baseUrl) throws IOException, DocumentException {
 		
-		String zipFileName = entity.getName()+"_"+user.getId()+"_"+System.currentTimeMillis();
+		String zipFileName = entity.getName().replaceAll(" ", "_")+"_"+user.getId()+"_"+System.currentTimeMillis();
 		String folderToZip = "temp"+File.separator+zipFileName+File.separator;
 		File fileToZip = new File(folderToZip);
 		fileToZip.mkdir();
@@ -54,10 +56,28 @@ public class AsyncService {
 		folderServer.addDirToArchive(zos, fileToZip, "");
 		zos.close();
 		
-		mailService.sendMailFullDonwload(baseUrl+"extDocs/"+zipFileName, user);
+		try {
+			mailService.sendMailFullDonwload(baseUrl+"extDocs/"+zipFileName, user, entity.getTmEmail());
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void createRoots(String rootPath, String watermark, List<Content> roots) throws IOException, DocumentException {
+		
+	/*	int i = 0;
+		
+		while (i<15) {
+			i++;
+			System.out.println(i);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}*/
 		
 		for (Content content : roots) {
 			

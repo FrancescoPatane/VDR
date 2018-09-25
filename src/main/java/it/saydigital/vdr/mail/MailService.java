@@ -1,5 +1,6 @@
 package it.saydigital.vdr.mail;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class MailService {
 //	@Autowired
 //	private SpringTemplateEngine engine;
 
-	public void sendMailFullDonwload(String link, User user) {
+	public void sendMailFullDonwload(String link, User user, String address) throws MessagingException {
 		StringTemplateResolver templateResolver = new StringTemplateResolver();
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 
@@ -51,14 +52,12 @@ public class MailService {
 		MailTemplate template = templateRepository.findByName("fullDownloadTemplate");
         String html = engine.process(template.getBody(), context);
 
-//		helper.setTo(user.getEmail());
-//        helper.setText(html, true);
-//        helper.setSubject(mail.getSubject());
-//        helper.setFrom(mail.getFrom());
+		helper.setTo(address);
+        helper.setText(html, true); //true means it is html
+        helper.setSubject(template.getSubject());
+        helper.setFrom("no-reply@vdr.com");
+        emailSender.send(message);
 		
-		
-		//		 ITemplateResource t = new  ITemplateResource();
-		//		 templateEngine.pr
         
         System.out.println(html);
 	}
