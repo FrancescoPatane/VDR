@@ -3,6 +3,7 @@ package it.saydigital.vdr.async;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
@@ -12,9 +13,12 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.itextpdf.text.DocumentException;
 
+import it.saydigital.vdr.async.task.BackgroundTask;
+import it.saydigital.vdr.async.task.TaskStatus;
 import it.saydigital.vdr.download.resourceserver.FolderServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServerFactory;
@@ -37,10 +41,19 @@ public class AsyncService {
 	@Autowired
 	private MailService mailService;
 	
+	private List<BackgroundTask> runningTasks = new ArrayList<>();
+	
 	@Async
+	@Transactional //to allow hibernate session in new thread
 	public void fullDowload(MarketingEntity entity, User user, String baseUrl) throws IOException, DocumentException {
 		
+		
+		
 		String zipFileName = entity.getName().replaceAll(" ", "_")+"_"+user.getId()+"_"+System.currentTimeMillis();
+		
+		BackgroundTask task = new BackgroundTask(zipFileName, user, entity, TaskStatus.RUNNING);
+		this.runningTasks.add(task);
+		
 		String folderToZip = "temp"+File.separator+zipFileName+File.separator;
 		File fileToZip = new File(folderToZip);
 		fileToZip.mkdir();
@@ -97,5 +110,20 @@ public class AsyncService {
 		}
 		
 	}
+
+	public List<BackgroundTask> getRunningTasks() {
+		return runningTasks;
+	}
+	
+	public boolean hasRunningTasks(long userId, long entityId) {
+		for (BackgroundTask task : this.getRunningTasks()) {
+			if (task.getUser().getId() == userId && task.getMktEntity().getId() == entityId && task.getStatus().equals(TaskStatus.RUNNING));
+			return true;
+		}
+		return false;
+	}
+
+	
+	
 
 }

@@ -41,11 +41,11 @@ function fullDownload(id){
 		cache: false,
 		timeout: 600000,
 		success: function (data) {
-
+			alert(data);
 
 		},
 		error: function (e) {
-
+			alert(e);
 
 		}
 	});

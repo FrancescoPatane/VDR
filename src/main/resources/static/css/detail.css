@@ -11,7 +11,7 @@
 	height: 450px;
 }
 
-#introSection{
+#introSection {
 	margin-bottom: 25px;
 }
 
@@ -19,10 +19,9 @@
 	text-align: center;
 }
 
-#docsTitle{
+#docsTitle {
 	margin-left: 4rem;
 }
-
 
 #docTree {
 	min-height: 250px;
@@ -33,10 +32,10 @@
 	width: 25%;
 	top: 60%;
 	right: inherit;
-    padding: 1rem;
-    border: 1px solid rgb(199, 199, 199);
-    border-radius: 0.5rem;
-    min-height: 7rem;
+	padding: 1rem;
+	border: 1px solid rgb(199, 199, 199);
+	border-radius: 0.5rem;
+	min-height: 7rem;
 }
 
 #download {
@@ -47,7 +46,10 @@ li .icon {
 	margin-right: 25px !important;
 }
 
-
-#commForm, .modalButton{
+#commForm, .modalButton {
 	text-align: center;
+}
+
+#fullDownloadButton i {
+	padding-left: 10px;
 }

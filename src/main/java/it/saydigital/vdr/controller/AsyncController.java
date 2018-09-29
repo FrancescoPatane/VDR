@@ -23,40 +23,48 @@ import it.saydigital.vdr.security.PermissionChecker;
 
 @Controller
 public class AsyncController {
-	
+
 	@Autowired
 	private MarketingEntityRepository mktRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PermissionChecker permChecker;
-	
+
 	@Autowired
 	private AsyncService asyncService;
-	
-	
+
+
 	@ResponseBody
 	@GetMapping("/ajax/fullDonwload")
-	public void fullDonwload(@RequestParam("id") long id, @RequestParam("baseUrl") String baseUrl) throws IOException, DocumentException  {
-		
-
+	public String fullDonwload(@RequestParam("id") long id, @RequestParam("baseUrl") String baseUrl) throws IOException, DocumentException  {
+		String resultMessage = "";
 		Optional<MarketingEntity> optContent = mktRepository.findById(id);
 		User user = this.getUser(this.getAuthentication().getName());
-		
-		if (optContent.isPresent() && permChecker.hasPermissionForObject(user,  optContent.get())) {
-			asyncService.fullDowload(optContent.get(), user, baseUrl);
+		if (optContent.isPresent()) {
+			if (!asyncService.hasRunningTasks(user.getId(), optContent.get().getId())) {
+				if (permChecker.hasPermissionForObject(user,  optContent.get())) {
+					asyncService.fullDowload(optContent.get(), user, baseUrl);
+					resultMessage = "Download requested. You will receive an email with a download link once the resource you requested has been created.";
+				}else {
+					resultMessage = "You are not authorized to download this package.";
+				}
+			}else {
+				resultMessage = "You have already requeted the download of this package.";
+			}
+		}else {
+			resultMessage = "Error: impossible to require download. Please contact an administrator.";
 		}
-
-		
+		return resultMessage;
 	}
-	
+
 	private Authentication getAuthentication() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth;
 	}
-	
+
 	private User getUser (String email) {
 		return userRepository.findByEmail(email);
 	}
