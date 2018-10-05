@@ -3,12 +3,15 @@ package it.saydigital.vdr.controller;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +22,7 @@ import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
 import it.saydigital.vdr.repository.UserRepository;
+import it.saydigital.vdr.security.PasswordUtilities;
 import it.saydigital.vdr.security.PermissionChecker;
 
 @Controller
@@ -35,6 +39,9 @@ public class AsyncController {
 
 	@Autowired
 	private AsyncService asyncService;
+	
+	@Autowired
+	private PasswordUtilities pswUtils;
 
 
 	@ResponseBody
@@ -58,6 +65,13 @@ public class AsyncController {
 			resultMessage = "Error: impossible to require download. Please contact an administrator.";
 		}
 		return resultMessage;
+	}
+	
+	@ResponseBody
+	@PostMapping("/ajax/changePsw")
+	public void changePassword(@Valid @RequestBody String newPsw) {
+		User user = this.getUser(this.getAuthentication().getName());
+		pswUtils.changePsw(newPsw, user, userRepository);
 	}
 
 	private Authentication getAuthentication() {

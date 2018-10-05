@@ -2,6 +2,9 @@ package it.saydigital.vdr.api;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class MarketingEntityJSON {
 	
     private String id;
@@ -63,6 +66,20 @@ public class MarketingEntityJSON {
 	public void setContents(List<ContentJSON> contents) {
 		this.contents = contents;
 	}
+	@Override
+	public String toString() {
+		String serialized ="";
+		try {
+			serialized = new ObjectMapper().writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return serialized;
+		
+	}
+	
+	
     
     
 

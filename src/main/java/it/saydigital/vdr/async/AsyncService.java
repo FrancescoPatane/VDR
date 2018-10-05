@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.mail.MessagingException;
@@ -64,9 +65,9 @@ public class AsyncService {
 		File zipFile = new File(externalDocumentsPath+File.separator+zipFileName+".zip");
 		FileOutputStream fos = new FileOutputStream(zipFile);
 		ZipOutputStream zos = new ZipOutputStream(fos);
-		
+//		zos.putNextEntry(new ZipEntry(zipFileName));
 		FolderServer folderServer = new FolderServer();
-		folderServer.addDirToArchive(zos, fileToZip, "");
+		folderServer.addDirToArchive(zos, fileToZip, zipFileName+File.separator);
 		zos.close();
 		
 		try {
@@ -79,18 +80,6 @@ public class AsyncService {
 	
 	private void createRoots(String rootPath, String watermark, List<Content> roots) throws IOException, DocumentException {
 		
-	/*	int i = 0;
-		
-		while (i<15) {
-			i++;
-			System.out.println(i);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
 		
 		for (Content content : roots) {
 			

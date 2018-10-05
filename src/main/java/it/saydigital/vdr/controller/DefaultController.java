@@ -1,7 +1,9 @@
 package it.saydigital.vdr.controller;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,9 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +47,13 @@ import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.security.PasswordUtilities;
 import it.saydigital.vdr.security.PermissionChecker;
 import it.saydigital.vdr.tree.TreeManager;
+import it.saydigital.vdr.util.EnvHandler;
 import it.saydigital.vdr.watermark.Watermarker;
 
 @Controller
 public class DefaultController {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private UserRepository userRepository;
@@ -63,11 +72,8 @@ public class DefaultController {
 
 	@Autowired
 	private PermissionChecker permChecker;
-	
-	@Autowired
-	private PasswordUtilities pswUtils;
-	
-	
+
+
 
 	@GetMapping(value = { "/", "/home" })
 	public String home() {
@@ -115,14 +121,11 @@ public class DefaultController {
 			uiModel.addAttribute("docTree", treeManager.getDocTree(entityId));
 			return "/detail";
 		}else {
+			log.warn("User " + user.getEmail() + " tried to access resource " + mktEntity.getName() + "without  authorization.");
 			return "/error/403";
 		}
 	}
 
-
-	private User getUser (String email) {
-		return userRepository.findByEmail(email);
-	}
 
 	@GetMapping("/download")
 	public ResponseEntity<byte[]> download(@RequestParam("contentId") long contentId) throws IOException, DocumentException {
@@ -142,25 +145,45 @@ public class DefaultController {
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
 			return response;
 		}else {
+			log.warn("Couldn't find content " + contentId);
 			return null;
 		}
 	}
-	
-	
-	@ResponseBody
-	@PostMapping("/ajax/changePsw")
-	public void changePassword(@Valid @RequestBody String newPsw) {
-		User user = this.getUser(this.getAuthentication().getName());
-		pswUtils.changePsw(newPsw, user, userRepository);
+
+
+	@GetMapping("/extDocs/{filename}")
+	public ResponseEntity<byte[]> downloadFromLink(@PathVariable String filename)  {
+
+		String externalDocumentsPath = EnvHandler.getProperty("app.external_contents_folder");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType("application/zip"));
+		filename +=".zip";
+		File downloadFile = new File(externalDocumentsPath+File.separator+filename);
+		headers.add("content-disposition", "attachment; filename=" + filename);
+		byte[] bytes = {};
+		try {
+			bytes = Files.readAllBytes(downloadFile.toPath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.error("Couldn't find external downloadable file " + filename);
+			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.NOT_FOUND);
+			return response;
+		}
+		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+		return response;
 	}
-	
-	
+
+
 
 	private Authentication getAuthentication() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth;
 	}
 
+	private User getUser (String email) {
+		return userRepository.findByEmail(email);
+	}
 
 
 
