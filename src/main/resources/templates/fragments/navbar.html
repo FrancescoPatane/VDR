@@ -21,20 +21,15 @@
 				<button type="button" id="dropdownMenu1" data-toggle="dropdown"
 					class="btn btn-outline-secondary dropdown-toggle" sec:authentication="name">
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right mt-2">
-					<li class="px-3 py-2">
-					<form class="dropdown-item" th:action="@{/logout}" method="post">
+  <div class="dropdown-menu dropdown-menu-right" >
+    <a class="dropdown-item" data-toggle="modal" href="#changePswModal"><i class="fas fa-key"></i>Password</a>
+    <a class="dropdown-item" data-toggle="modal" href="#tasksModal"><i class="fas fa-download"></i>Processes</a>
+    <div class="dropdown-divider"></div>
+    					<form class="dropdown-item" th:action="@{/logout}" method="post">
 					<i class="fas fa-sign-out-alt"></i>
 						<input type="submit" class="btn btn-link" value="Sign Out" />
 					</form>
-					</li>
-					<li class="px-3 py-2">
-<!-- 					<input class="btn btn-link" id="changePassword" type="button" value="Password"> -->
-					    <i class="fas fa-key dropdown-item"><button class="btn btn-link" data-toggle="modal"
-		data-target="#changePswModal">Password</button></i>
-					
-					</li>
-				</ul>
+  </div>
 			</li>
 		</ul>
 	</nav>
@@ -73,6 +68,46 @@
 			</div>
 		</div>
 	</div>
+	
+	
+		<div class="modal fade" id="tasksModal" 
+		role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Personal Processes</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				        <table id="taskTable" class="table table-stripped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            <tr>
+            <td>processo1</td>
+            <td>
+            <div class="progress">
+  <div class="progress-bar" role="progressbar" style="width: 75%;">75%</div>
+</div>
+            </td>
+            <td>In corso</td>
+            </tr>
+
+            </tbody>
+        </table>
+			</div>
+		</div>
+	</div>
+	
+	
+	
 </div>
 
 </body>
