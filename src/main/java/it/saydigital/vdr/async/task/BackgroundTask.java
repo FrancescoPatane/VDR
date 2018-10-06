@@ -19,6 +19,7 @@ public class BackgroundTask {
 		this.user = user;
 		this.mktEntity = mktEntity;
 		this.status = status;
+		this.completePct = 0;
 	}
 	public String getId() {
 		return id;
@@ -43,6 +44,9 @@ public class BackgroundTask {
 	}
 	public void setCompletePct(int completePct) {
 		this.completePct = completePct;
+	}
+	public void setCompletePct(int done, int steps) {
+		this.completePct = done/steps*100;
 	}
 	public TaskStatus getStatus() {
 		return status;
