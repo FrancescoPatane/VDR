@@ -46,7 +46,7 @@ public class AsyncService {
 	@Autowired
 	private MailService mailService;
 	
-	private List<BackgroundTask> runningTasks = new ArrayList<>();
+	private List<BackgroundTask> tasks = new ArrayList<>();
 	
 	@Async
 	@Transactional //to allow hibernate session in new thread
@@ -57,7 +57,7 @@ public class AsyncService {
 		String zipFileName = entity.getName().replaceAll(" ", "_")+"_"+user.getId()+"_"+System.currentTimeMillis();
 		
 		BackgroundTask task = new BackgroundTask(zipFileName, user, entity, TaskStatus.RUNNING);
-		this.runningTasks.add(task);
+		this.tasks.add(task);
 		
 		String folderToZip = "temp"+File.separator+zipFileName+File.separator;
 		File fileToZip = new File(folderToZip);
@@ -84,6 +84,7 @@ public class AsyncService {
 			mailService.sendMailFullDonwload(baseUrl+"extDocs/"+zipFileName, user, entity.getTmEmail());
 			done++;
 			task.setCompletePct(done, steps);
+			task.setStatus(TaskStatus.COMPLETED);
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			log.error("Failed to send mail during full download background task for user " + user.getEmail() + "and entity " + entity.getName());
@@ -121,16 +122,27 @@ public class AsyncService {
 		
 	}
 
-	public List<BackgroundTask> getRunningTasks() {
-		return runningTasks;
+	public List<BackgroundTask> getTasks() {
+		return tasks;
 	}
 	
 	public boolean hasRunningTasks(long userId, long entityId) {
-		for (BackgroundTask task : this.getRunningTasks()) {
+		for (BackgroundTask task : this.getTasks()) {
+			System.out.println(task.toString());
 			if (task.getUser().getId() == userId && task.getMktEntity().getId() == entityId && task.getStatus().equals(TaskStatus.RUNNING));
 			return true;
 		}
 		return false;
+	}
+	
+	
+	public List<BackgroundTask> getTasksForUser(long id) {
+		List<BackgroundTask> result = new ArrayList<>();
+		for (BackgroundTask task : this.tasks) {
+			if (task.getUser().getId()==id)
+				result.add(task);
+		}
+		return result;
 	}
 
 	

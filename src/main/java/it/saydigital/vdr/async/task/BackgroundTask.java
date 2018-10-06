@@ -54,6 +54,11 @@ public class BackgroundTask {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "BackgroundTask [id=" + id + ", user=" + user + ", mktEntity=" + mktEntity + ", completePct="
+				+ completePct + ", status=" + status + "]";
+	}
 	
 	
 

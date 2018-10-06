@@ -60,3 +60,45 @@ function fire_ajax_submit() {
 		setTimeout(function() {$('#diffPsw').hide()}, 3000);
 	}
 }
+
+
+$('#tasksModal').on('shown.bs.modal', function () {
+		setTimeout(updateProgress,1000);
+//	updateProgress();
+
+})
+
+
+
+
+function updateProgress (){
+//		var token = $("input[name='_csrf']").val();
+//		var header = "X-CSRF-TOKEN";
+//		var baseUrl = $('head base')[0].href;
+		$.ajax({
+			type: "GET",
+//			beforeSend: function(request) {
+//				request.setRequestHeader(header, token);
+//			},
+			contentType: "application/json",
+			url: "/ajax/checkTasks",
+//			data: {id:id,baseUrl:baseUrl},
+			cache: false,
+			timeout: 600000,
+			success: function (data) {
+				$('#tasksTable').html(data);
+			},
+			error: function (e) {
+				alert(e);
+
+			}
+		});
+		if ($('#tasksModal').is(':visible')){
+			setTimeout(updateProgress,1000);
+		}else{
+			$('#tasksTable').html("");
+			return
+		}
+
+}
+
