@@ -21,6 +21,7 @@ import com.itextpdf.text.DocumentException;
 
 import it.saydigital.vdr.async.AsyncService;
 import it.saydigital.vdr.async.task.BackgroundTask;
+import it.saydigital.vdr.async.task.FullDownloadTask;
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
@@ -53,7 +54,7 @@ public class AsyncController {
 		Optional<MarketingEntity> optContent = mktRepository.findById(id);
 		User user = this.getUser(this.getAuthentication().getName());
 		if (optContent.isPresent()) {
-			if (!asyncService.hasRunningTasks(user.getId(), optContent.get().getId())) {
+			if (!asyncService.hasRunningFullDownloadTasks(user.getId(), optContent.get().getId())) {
 				if (permChecker.hasPermissionForObject(user,  optContent.get())) {
 					asyncService.fullDowload(optContent.get(), user, baseUrl);
 					resultMessage = "Download requested. You will receive an email with a download link once the resource you requested has been created.";
@@ -79,22 +80,35 @@ public class AsyncController {
 	public String getTasksByUser() {
 		User user = this.getUser(this.getAuthentication().getName());
 		List<BackgroundTask> tasks = asyncService.getTasksForUser(user.getId());
-		System.out.println(tasks.get(0).getCompletePct());
 		StringBuilder sbuilder = new StringBuilder();
 		for (BackgroundTask task : tasks) {
-			sbuilder.append("<tr><td>");
-			sbuilder.append(task.getMktEntity().getName());
-			sbuilder.append("</td><td>");
-			sbuilder.append("<div class=\"progress\"><div class=\"progress-bar\" role=\"progressbar\" style=\"width: ");
-			sbuilder.append(task.getCompletePct());
-			sbuilder.append("%;\">");
-			sbuilder.append(task.getCompletePct());
-			sbuilder.append("%</div></div></div></td><td>");
-			sbuilder.append(task.getStatus());
-			sbuilder.append("</td></tr>");
+			if (task.getName().equalsIgnoreCase("Full Download")) {
+				this.writeFDTask(sbuilder, (FullDownloadTask)task);
+			}
+
 		}
 		return sbuilder.toString();
-		
+
+	}
+
+	private void writeFDTask(StringBuilder sbuilder, FullDownloadTask task) {
+		sbuilder.append("<tr><td>");
+		sbuilder.append(task.getName() + " " + task.getMktEntity().getName());
+		sbuilder.append("</td><td>");
+		String progressBarClass = "";
+		if (!task.getStatus().toString().equals("RUNNING")) {
+			if (task.getStatus().toString().equals("COMPLETED"))
+				progressBarClass = "bg-success";
+			else
+				progressBarClass = "bg-danger";
+		}
+		sbuilder.append("<div class=\"progress\"><div class=\"progress-bar " + progressBarClass + "\" role=\"progressbar\" style=\"width: ");
+		sbuilder.append(task.getCompletePct());
+		sbuilder.append("%;\">");
+		sbuilder.append(task.getCompletePct());
+		sbuilder.append("%</div></div></div></td><td>");
+		sbuilder.append(task.getStatus());
+		sbuilder.append("</td></tr>");
 	}
 
 	private Authentication getAuthentication() {

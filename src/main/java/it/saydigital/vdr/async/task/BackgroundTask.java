@@ -1,52 +1,58 @@
 package it.saydigital.vdr.async.task;
 
+import java.util.Map;
+
 import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
 
-public class BackgroundTask {
+public abstract class BackgroundTask {
 	
 	private String id;
-	private User user;
-	private MarketingEntity mktEntity;
-	private int completePct;
+	private String name;
+	private User requestor;
+	private int steps;
+	private int done;
 	private TaskStatus status;
 	
 	
 	
 	
-	public BackgroundTask(String id, User user, MarketingEntity mktEntity, TaskStatus status) {
+
+	
+	public BackgroundTask(String id, String name, User requestor) {
 		this.id = id;
-		this.user = user;
-		this.mktEntity = mktEntity;
-		this.status = status;
-		this.completePct = 0;
+		this.name = name;
+		this.requestor = requestor;
+		this.status = TaskStatus.RUNNING;
+		this.done = 0;
+		this.steps = 0;
 	}
+	
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public User getUser() {
-		return user;
+	
+public int getSteps() {
+		return steps;
 	}
-	public void setUser(User user) {
-		this.user = user;
+
+	public void setSteps(int steps) {
+		this.steps = steps;
 	}
-	public MarketingEntity getMktEntity() {
-		return mktEntity;
+
+	public int getDone() {
+		return done;
 	}
-	public void setMktEntity(MarketingEntity mktEntity) {
-		this.mktEntity = mktEntity;
+
+	public void setDone(int done) {
+		this.done = done;
 	}
+
 	public int getCompletePct() {
-		return completePct;
-	}
-	public void setCompletePct(int completePct) {
-		this.completePct = completePct;
-	}
-	public void setCompletePct(int done, int steps) {
-		this.completePct = done/steps*100;
+		return (int)(((float)this.done / this.steps) * 100);
 	}
 	public TaskStatus getStatus() {
 		return status;
@@ -54,12 +60,22 @@ public class BackgroundTask {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
-	@Override
-	public String toString() {
-		return "BackgroundTask [id=" + id + ", user=" + user + ", mktEntity=" + mktEntity + ", completePct="
-				+ completePct + ", status=" + status + "]";
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	
+	public User getRequestor() {
+		return requestor;
+	}
+
+	public void setRequestor(User requestor) {
+		this.requestor = requestor;
+	}
+
+	public abstract void executeTask(Map<String, Object> params);
+
 
 }
