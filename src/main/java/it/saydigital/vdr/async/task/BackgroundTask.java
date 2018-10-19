@@ -2,7 +2,6 @@ package it.saydigital.vdr.async.task;
 
 import java.util.Map;
 
-import it.saydigital.vdr.model.MarketingEntity;
 import it.saydigital.vdr.model.User;
 
 public abstract class BackgroundTask {
