@@ -24,10 +24,17 @@ html, body {
 #loginForm {
 	margin-left: 30%;
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 #loginForm label{
 	font-weight: 600;
+}
+
+#loginForm #forgotPass{
+	background: #eee;
+    border-top: 1px solid #bfbfbf;
+    padding: 10px;
 }
 
 #signOut{

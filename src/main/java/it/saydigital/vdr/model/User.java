@@ -35,8 +35,9 @@ public class User {
     @NotNull
     private String password;
     private boolean enabled;
-//    @ManyToMany(mappedBy = "users")
-//    private Set<MarketingEntity> mktEntities = new HashSet<>();
+    private String securityQuestion;
+    private String securityAnswer;
+    
     
     @OneToMany(mappedBy="user", orphanRemoval = true)
     private List<Authorization> Authorizations;
@@ -105,16 +106,6 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-
-//	public Set<MarketingEntity> getMktEntities() {
-//		return mktEntities;
-//	}
-//
-//	public void setMktEntities(Set<MarketingEntity> mktEntities) {
-//		this.mktEntities = mktEntities;
-//	}
-	
-	
     
 	public List<MarketingEntity> getMktEntitiesOrdered() {
 		List<MarketingEntity> entities = new ArrayList<>(/*this.mktEntities*/);
@@ -128,6 +119,22 @@ public class User {
 
 	public void setAuthorizations(List<Authorization> authorizations) {
 		Authorizations = authorizations;
+	}
+
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setSecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
+	}
+
+	public String getSecurityAnswer() {
+		return securityAnswer;
+	}
+
+	public void setSecurityAnswer(String securityAnswer) {
+		this.securityAnswer = securityAnswer;
 	}
     
     

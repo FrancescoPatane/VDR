@@ -52,7 +52,7 @@ import it.saydigital.vdr.watermark.Watermarker;
 
 @Controller
 public class DefaultController {
-	
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -174,6 +174,40 @@ public class DefaultController {
 		return response;
 	}
 
+
+	@GetMapping("/passRecovery1")
+	public String passRecovery1() {
+		return "/forgotPassword";
+	}
+
+	@PostMapping("/passRecovery2")
+	public String passRecovery2(@RequestParam("email") String email, Model uiModel) {
+		System.out.println(email);
+		User user = this.getUser(email);
+		System.out.println(user);
+		if (user == null) {
+			uiModel.addAttribute("missingMail", true);
+			return "/forgotPassword";
+		}else {
+			uiModel.addAttribute("userMail", email);
+			return "/resetPassword";
+		}
+	}
+
+	@PostMapping("/passRecovery3")
+	public String resetPassword(@RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) {
+		User user = this.getUser(email);
+		if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
+			uiModel.addAttribute("wrongAnswer", true);
+			uiModel.addAttribute("userMail", email);
+			return "/resetPassword";
+		}else {
+			uiModel.addAttribute("successfull", true);
+			return "/resetPassword";
+		}
+		
+		
+	}
 
 
 	private Authentication getAuthentication() {
