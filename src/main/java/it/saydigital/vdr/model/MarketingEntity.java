@@ -39,13 +39,6 @@ public class MarketingEntity {
 	private String tmEmail;
 	private LocalDateTime creationDate;
 	private Boolean isLocked;
-	//    @ManyToMany
-	//    @JoinTable( 
-	//        joinColumns = @JoinColumn(
-	//          name = "mkt_entity_id", referencedColumnName = "id"), 
-	//        inverseJoinColumns = @JoinColumn(
-	//          name = "user_id", referencedColumnName = "id")) 
-	//    private Set<User> users = new HashSet<>();
 	@OneToMany(mappedBy="mktEntity", orphanRemoval = true)
 	private List<Content> contents;
 	@OneToMany(mappedBy="mktEntity", orphanRemoval = true)

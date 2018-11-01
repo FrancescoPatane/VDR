@@ -2,6 +2,7 @@ package it.saydigital.vdr.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -73,7 +74,15 @@ public class AsyncController {
 	@PostMapping("/ajax/changePsw")
 	public void changePassword(@Valid @RequestBody String newPsw) {
 		User user = this.getUser(this.getAuthentication().getName());
-		pswUtils.changePsw(newPsw, user, userRepository);
+		pswUtils.changePsw(newPsw, user);
+	}
+	
+	@PostMapping("/ajaxPublic/changePswWithToken")
+	public void changePasswordWithToken( @RequestBody Map<String, String> params) {
+		System.out.println(params);
+		String token = params.get("resetToken");
+		String newPsw = params.get("newPsw");
+		pswUtils.changePswByResetToken(newPsw, token);
 	}
 
 	@GetMapping("/ajax/checkTasks")

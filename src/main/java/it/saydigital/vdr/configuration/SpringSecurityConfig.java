@@ -72,9 +72,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3").permitAll()
+                .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword").permitAll()
+                .antMatchers("/ajaxPublic/**").permitAll().anyRequest().permitAll()
                 .antMatchers("/api/**").permitAll().anyRequest().permitAll()
-                .antMatchers("/user/**", "/ajax/**").authenticated()//.hasAnyRole("USER")//.hasAnyAuthority("CAN_SEE_USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -3,12 +3,16 @@ package it.saydigital.vdr.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.io.FileUtils;
@@ -37,9 +41,11 @@ import com.itextpdf.text.DocumentException;
 
 import it.saydigital.vdr.download.resourceserver.ResourceServer;
 import it.saydigital.vdr.download.resourceserver.ResourceServerFactory;
+import it.saydigital.vdr.mail.MailService;
 import it.saydigital.vdr.model.Content;
 import it.saydigital.vdr.model.ContentLink;
 import it.saydigital.vdr.model.MarketingEntity;
+import it.saydigital.vdr.model.PasswordResetToken;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.ContentRepository;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
@@ -72,6 +78,12 @@ public class DefaultController {
 
 	@Autowired
 	private PermissionChecker permChecker;
+
+	@Autowired
+	private MailService mailService;
+
+	@Autowired
+	private PasswordUtilities pswUtils;
 
 
 
@@ -176,37 +188,51 @@ public class DefaultController {
 
 
 	@GetMapping("/passRecovery1")
-	public String passRecovery1() {
+	public String passRecovery1() throws MalformedURLException {
 		return "/forgotPassword";
 	}
 
 	@PostMapping("/passRecovery2")
 	public String passRecovery2(@RequestParam("email") String email, Model uiModel) {
-		System.out.println(email);
 		User user = this.getUser(email);
-		System.out.println(user);
 		if (user == null) {
 			uiModel.addAttribute("missingMail", true);
 			return "/forgotPassword";
 		}else {
 			uiModel.addAttribute("userMail", email);
+			uiModel.addAttribute("question", user.getSecurityQuestion());
 			return "/resetPassword";
 		}
 	}
 
 	@PostMapping("/passRecovery3")
-	public String resetPassword(@RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) {
+	public String resetPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) throws MessagingException {
 		User user = this.getUser(email);
 		if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
 			uiModel.addAttribute("wrongAnswer", true);
 			uiModel.addAttribute("userMail", email);
 			return "/resetPassword";
 		}else {
+			String url = this.getBaseUrl(request);
+			String token = pswUtils.getPasswordResetToken(user);
+			String changePasswordUrl = url+"/changePassword?token="+token+"";
+			mailService.sendMailPasswordReset(user, changePasswordUrl);
 			uiModel.addAttribute("successfull", true);
 			return "/resetPassword";
 		}
-		
-		
+
+
+	}
+
+	@GetMapping("/changePassword")
+	public String changePassword(@RequestParam("resetToken") String resetToken, Model uimodel) {
+		PasswordResetToken resetTokenObj = pswUtils.getPasswordResetTokenIfValid(resetToken);
+		if (resetTokenObj == null) {
+			return "403";
+		}else {
+			uimodel.addAttribute("resetToken", resetTokenObj.getToken());
+			return "changePassword";
+		}
 	}
 
 
@@ -217,6 +243,18 @@ public class DefaultController {
 
 	private User getUser (String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	private String getBaseUrl(HttpServletRequest request) {
+		String url = "";
+		try {
+			URL requestURL = new URL(request.getRequestURL().toString());
+			url = requestURL.getProtocol() + "://" + requestURL.getHost() + ":" + requestURL.getPort();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return url;
 	}
 
 
