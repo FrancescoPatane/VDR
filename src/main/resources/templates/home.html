@@ -35,7 +35,6 @@
     <a class="dropdown-item" th:href="@{/changeLocale/it_IT}">Italian</a>
   </div>
 </div>
-	
 
 		<div sec:authorize="isAuthenticated()">
 
@@ -47,7 +46,7 @@
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 					<form class="dropdown-item" th:action="@{/logout}" method="post">
 						<input id="signOut" type="submit" class="btn btn-link"
-							value="Sign Out" />
+							th:value="#{navbar.logout}" />
 					</form>
 				</div>
 			</div>
@@ -57,10 +56,9 @@
 		<h1>Virtual Data Room</h1>
 		<br> <a sec:authorize="isAnonymous()"
 			class="btn btn-primary btn-lg scroller" href="#loginForm"
-			role="button">Access</a> <a sec:authorize="isAuthenticated()"
+			role="button" th:text="#{home.access}"></a> <a sec:authorize="isAuthenticated()"
 			class="btn btn-primary btn-lg scroller" th:href="@{/user}"
-			role="button">Access</a>
-<h1 th:text="#{greeting}"></h1>
+			role="button" th:text="#{home.access}"></a>
 	</div>
 
 		<form id="loginForm" th:action="@{/login}" method="post">
@@ -88,7 +86,7 @@
 			</div>
 			<div class="form-group row">
 				<div class="col-sm-7" id="forgotPass">
-					<span><a th:href="@{/passRecovery1}">Forgot Password?</a></span>
+					<span><a th:href="@{/passRecovery1}" th:text="#{forgot.password}"></a></span>
 				</div>
 			</div>
 

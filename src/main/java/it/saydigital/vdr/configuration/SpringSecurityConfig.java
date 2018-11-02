@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import it.saydigital.vdr.security.MyAuthenticationSuccessHandler;
 
 @Configuration
 // http://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html
@@ -26,10 +29,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
     
+//    @Autowired
+//    private MyAuthenticationSuccessHandler MyAuthenticationSuccessHandler;
+    
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
     };
+    
+    @Bean
+    public MyAuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+    	MyAuthenticationSuccessHandler successHandler = new MyAuthenticationSuccessHandler();
+    	successHandler.setDefaultTargetUrl("/user");
+    	return successHandler;
+    }
     
 //    @Bean
 //    public DaoAuthenticationProvider authProvider() {
@@ -72,7 +85,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale").permitAll()
+                .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**").permitAll()
                 .antMatchers("/ajaxPublic/**").permitAll().anyRequest().permitAll()
                 .antMatchers("/api/**").permitAll().anyRequest().permitAll()
                 .anyRequest().authenticated()
@@ -80,7 +93,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/user")
+                .successHandler(this.myAuthenticationSuccessHandler())
                 .and()
                 .logout()
                 .permitAll()

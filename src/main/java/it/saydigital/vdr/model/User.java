@@ -3,6 +3,7 @@ package it.saydigital.vdr.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,8 @@ public class User {
     private boolean enabled;
     private String securityQuestion;
     private String securityAnswer;
+    private String locale;
+    private Date passwordCreationDate;
     
     
     @OneToMany(mappedBy="user", orphanRemoval = true)
@@ -63,6 +66,7 @@ public class User {
 		this.password = password;
 		this.enabled = true;
 		this.roles = new HashSet<>();
+		this.passwordCreationDate = new Date();
 	}
 
 	public Long getId() {
@@ -135,6 +139,22 @@ public class User {
 
 	public void setSecurityAnswer(String securityAnswer) {
 		this.securityAnswer = securityAnswer;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+	public Date getPasswordCreationDate() {
+		return passwordCreationDate;
+	}
+
+	public void setPasswordCreationDate(Date passwordCreationDate) {
+		this.passwordCreationDate = passwordCreationDate;
 	}
     
     

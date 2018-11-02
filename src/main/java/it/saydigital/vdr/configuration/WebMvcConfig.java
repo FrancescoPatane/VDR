@@ -39,7 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         ReloadableResourceBundleMessageSource messageSource
           = new ReloadableResourceBundleMessageSource();
          
-        messageSource.setBasename("classpath:messages");
+        messageSource.setBasenames("classpath:messages/messages", "classpath:org/springframework/security/messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
