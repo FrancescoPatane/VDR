@@ -8,17 +8,20 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +30,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itextpdf.text.DocumentException;
@@ -88,10 +94,21 @@ public class DefaultController {
 
 
 	@GetMapping(value = { "/", "/home" })
-	public String home() {
+	public String home(HttpServletRequest request, HttpServletResponse response) {
+//		System.out.println(LocaleContextHolder.getLocale());
+//		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+//        localeResolver.setLocale(request, response, Locale.FRANCE);
+//        System.out.println(LocaleContextHolder.getLocale());
 		return "/home";
 	}
 
+	@GetMapping("/changeLocale/{locale}")
+	public String changeLocale(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) {
+		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+		Locale newLocale = new Locale(locale);
+		localeResolver.setLocale(request, response, newLocale);		
+		return "redirect:/home";
+	}
 
 	@GetMapping("/login")
 	public String login() {

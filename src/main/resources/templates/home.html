@@ -22,6 +22,21 @@
 
 	<div class="backgroundContainer">
 
+
+	
+	
+	<div class="dropdown float-left">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" th:href="@{/changeLocale/en_US}">English</a>
+    <a class="dropdown-item" th:href="@{/changeLocale/fr_FR}">French</a>
+    <a class="dropdown-item" th:href="@{/changeLocale/it_IT}">Italian</a>
+  </div>
+</div>
+	
+
 		<div sec:authorize="isAuthenticated()">
 
 			<div class="dropdown float-right">
@@ -45,7 +60,7 @@
 			role="button">Access</a> <a sec:authorize="isAuthenticated()"
 			class="btn btn-primary btn-lg scroller" th:href="@{/user}"
 			role="button">Access</a>
-
+<h1 th:text="#{greeting}"></h1>
 	</div>
 
 		<form id="loginForm" th:action="@{/login}" method="post">
