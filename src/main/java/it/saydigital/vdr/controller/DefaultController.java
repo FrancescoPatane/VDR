@@ -60,6 +60,7 @@ import it.saydigital.vdr.security.PasswordUtilities;
 import it.saydigital.vdr.security.PermissionChecker;
 import it.saydigital.vdr.tree.TreeManager;
 import it.saydigital.vdr.util.EnvHandler;
+import it.saydigital.vdr.util.GeneralHelper;
 import it.saydigital.vdr.watermark.Watermarker;
 
 @Controller
@@ -95,7 +96,7 @@ public class DefaultController {
 
 	@GetMapping(value = { "/", "/home" })
 	public String home(HttpServletRequest request, HttpServletResponse response) {
-//		System.out.println(LocaleContextHolder.getLocale());
+		System.out.println(LocaleContextHolder.getLocale());
 //		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
 //        localeResolver.setLocale(request, response, Locale.FRANCE);
 //        System.out.println(LocaleContextHolder.getLocale());
@@ -106,7 +107,7 @@ public class DefaultController {
 	public String changeLocale(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) {
 		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
 		System.out.println(LocaleContextHolder.getLocale());
-		Locale newLocale = new Locale(locale);
+		Locale newLocale =  GeneralHelper.getLoacaleFromLanguage_Country(locale);
 		localeResolver.setLocale(request, response, newLocale);		
 		return "redirect:/home";
 	}
