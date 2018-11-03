@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class MailTemplate {
@@ -17,6 +18,7 @@ public class MailTemplate {
 	private String subject;
 	@Column(length = 5000)
 	private String body;
+	@NotNull
 	private String locale;
 
 

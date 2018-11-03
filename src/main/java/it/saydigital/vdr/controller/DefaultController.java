@@ -106,7 +106,7 @@ public class DefaultController {
 	@GetMapping("/changeLocale/{locale}")
 	public String changeLocale(HttpServletRequest request, HttpServletResponse response, @PathVariable String locale) {
 		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
-		System.out.println(LocaleContextHolder.getLocale());
+		System.out.println(LocaleContextHolder.getLocale().toString());
 		Locale newLocale =  GeneralHelper.getLoacaleFromLanguage_Country(locale);
 		localeResolver.setLocale(request, response, newLocale);		
 		return "redirect:/home";

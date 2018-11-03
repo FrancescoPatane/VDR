@@ -51,5 +51,35 @@ public class UserApiImpl {
 		return resultMessage;
 
 	}
+	
+	
+	public Map<String, Object> changeUserStatus(Map<String, Object> payload) {
+		Map<String, Object> resultMessage = new HashMap<>();
+		String email = (String) payload.get("email");
+		boolean active = (boolean) payload.get("active");
+		User user = usrRepository.findByEmail(email);
+		if (user != null) {
+			user.setEnabled(active);
+			usrRepository.save(user);
+			resultMessage.put("success", "User created.");
+		}else {
+			resultMessage.put("error", "Could not find any user matching the email address in input.");
+			resultMessage.put("statusCode", 404);
+		}
+		return resultMessage;
+	}
+	
+	public Map<String, Object> deleteUser(String email) {
+		Map<String, Object> resultMessage = new HashMap<>();
+		User user = usrRepository.findByEmail(email);
+		if (user != null) {
+			usrRepository.delete(user);
+			resultMessage.put("success", "User deleted.");
+		}else {
+			resultMessage.put("error", "Could not find any user matching the email address in input.");
+			resultMessage.put("statusCode", 404);
+		}
+		return resultMessage;
+	}
 
 }

@@ -11,6 +11,8 @@ import it.saydigital.vdr.model.MailTemplate;
 public interface MailTemplateRepository extends JpaRepository<MailTemplate, Long>{
 	
 	MailTemplate findByName(String name);
+	
+	MailTemplate findByNameAndLocale(String name, String locale);
 
 
 }

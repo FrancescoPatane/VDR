@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -132,6 +133,42 @@ public class RestInterfaceController {
 			return result;
 		} catch (Exception e) {
 			log.error("Error after webservice call for createUser. Payload: " + payload.toString());
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
+		}
+	}
+	
+	@PutMapping("/api/user")
+	public Map<String, Object> changeUserStatus(@RequestBody Map<String, Object> payload, HttpServletResponse response) {
+
+		log.info("Received webservice call for changeUserStatus.");
+		
+		Map<String, Object> result =  usrApiImpl.changeUserStatus(payload);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			}
+			return result;
+		} catch (Exception e) {
+			log.error("Error after webservice call for changeUserStatus. Payload: " + payload.toString());
+			e.printStackTrace();
+			return this.returnServerError(e.getMessage());
+		}
+	}
+	
+	@DeleteMapping("/api/user/{email}")
+	public Map<String, Object> deleteUser(@PathVariable String email, HttpServletResponse response) {
+
+		log.info("Received webservice call for createUser.");
+		
+		Map<String, Object> result =  usrApiImpl.deleteUser(email);
+		try {
+			if (result.containsKey("statusCode")) {
+				this.assignSatusCode(response, result);
+			}
+			return result;
+		} catch (Exception e) {
+			log.error("Error after webservice call for deleteUser. User mail: " + email);
 			e.printStackTrace();
 			return this.returnServerError(e.getMessage());
 		}
