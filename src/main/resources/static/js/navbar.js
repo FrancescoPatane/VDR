@@ -38,10 +38,18 @@ function fire_ajax_submit() {
 
 //				var json = "<h4>Ajax Response</h4><pre>"
 //				+ JSON.stringify(data, null, 4) + "</pre>";
-
-				$('#succPsw').show();
-				setTimeout(function() {$('#succPsw').hide()}, 3000);
+				
+				if (data.executed){
+					$('#errPsw').hide();
+					$('#succPsw').show();
+					setTimeout(function() {$('#succPsw').hide()}, 3000);
+				}else{
+					$('#errPsw').html(data.message);
+					$('#errPsw').show();
+				}
 				$("#pswButton").prop("disabled", false);
+				
+				
 
 			},
 			error: function (e) {

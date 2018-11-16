@@ -11,7 +11,7 @@ import it.saydigital.vdr.model.Role;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.RoleRepository;
 import it.saydigital.vdr.repository.UserRepository;
-import it.saydigital.vdr.security.PasswordUtilities;
+import it.saydigital.vdr.security.password.PasswordUtilities;
 
 @Service
 public class UserApiImpl {
