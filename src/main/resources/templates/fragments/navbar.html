@@ -13,8 +13,17 @@
   <a class="navbar-brand" th:href="@{/home}">VDR</a>
 <!-- 		</a> -->
 		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="/user">Packages</a></li>
-			<li class="nav-item"><a class="nav-link" href="/families">FAQ</a></li>
+			<li class="nav-item"><a class="nav-link" th:href="@{/user}">Your Packages</a></li>
+			<li sec:authorize="hasAnyAuthority('SYSTEM_ADMINISTRATION','VDR_ADMINISTRATION')" class="nav-item dropdown">
+			<a class="nav-link" href="#"  role="button" data-toggle="dropdown">Administration</a>
+			<div class="dropdown-menu">
+          <a sec:authorize="hasAnyAuthority('SYSTEM_ADMINISTRATION','VDR_ADMINISTRATION')" class="dropdown-item" href="#">Reports</a>
+          <a sec:authorize="hasAuthority('SYSTEM_ADMINISTRATION')" class="dropdown-item" href="#">System Administration</a>
+<!--           <a sec:authorize="hasAuthority('SYSTEM_ADMINISTRATION')" class="dropdown-item" href="#">Password Policy</a> -->
+        </div>
+			</li>
+			
+			<li class="nav-item"><a class="nav-link" href="@{/faq}">FAQ</a></li>
 		</ul>
 		<ul class="nav navbar-nav flex-row justify-content-between ml-auto">
 			<li class="dropdown order-1">

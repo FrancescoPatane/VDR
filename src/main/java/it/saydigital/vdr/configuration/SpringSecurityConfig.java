@@ -88,6 +88,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**").permitAll()
                 .antMatchers("/ajaxPublic/**").permitAll().anyRequest().permitAll()
                 .antMatchers("/api/**").permitAll().anyRequest().permitAll()
+                .antMatchers("/admin/**").hasAnyAuthority("SYSTEM_ADMINISTRATION","VDR_ADMINISTRATION")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -30,7 +30,7 @@ public class Role {
           name = "role_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges = new HashSet<>();
+    private Set<Privilege> privileges;
     
     
 
@@ -67,11 +67,11 @@ public class Role {
 		this.users = users;
 	}
 
-	public Collection<Privilege> getPrivileges() {
+	public Set<Privilege> getPrivileges() {
 		return privileges;
 	}
 
-	public void setPrivileges(Collection<Privilege> privileges) {
+	public void setPrivileges(Set<Privilege> privileges) {
 		this.privileges = privileges;
 	}   
     
