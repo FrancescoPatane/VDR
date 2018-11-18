@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+	<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+	crossorigin="anonymous">
+	
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/system-admin.css}" />
+
+<title>System Administration</title>
+</head>
+<body>
+
+
+	<div th:replace="fragments/navbar :: navbar">...</div>
+
+
+<br>
+
+<br>
+
+<br>
+
+
+	<div class="container-fluid">
+	
+	<div class="row">
+	
+	<div class="col-md-4">
+	
+	<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Users</h5>
+<!--     <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+    <p class="card-text">Manage the application's users.</p>
+    <a class="btn btn-secondary float-right" th:href="@{/admin/system/users}" role="button"><i class="fas fa-search"></i></a>
+  </div>
+</div>
+	
+	
+	</div>
+	
+	<div class="col-md-4">
+	
+	<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Roles</h5>
+    <p class="card-text">Manage roles and linked privileges.</p>
+    <a class="btn btn-secondary float-right" th:href="@{/admin/system/roles}" role="button"><i class="fas fa-search"></i></a>
+  </div>
+</div>
+	</div>
+	
+	<div class="col-md-4">
+	
+	<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Password Policy</h5>
+    <p class="card-text">Manage the password policy.</p>
+    <a class="btn btn-secondary float-right" th:href="@{/admin/system/password-policy}" role="button"><i class="fas fa-search"></i></a>
+  </div>
+</div>
+	</div>
+	
+	</div>
+	
+	
+
+
+
+	</div>
+	
+
+
+	<div th:replace="fragments/footer :: scripts"></div>
+	
+<!-- 	<script type="text/javascript" th:src="@{/js/user.js}"></script> -->
+
+
+</body>
+</html>

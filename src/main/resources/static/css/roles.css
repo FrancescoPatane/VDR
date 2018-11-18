@@ -1,0 +1,12 @@
+.container-fluid {
+    padding-right: 5%;
+    padding-left: 10%;
+}
+
+#title{
+	text-align: center;
+}
+
+#delButton {
+	margin-right: 15px;
+}

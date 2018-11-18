@@ -1,9 +1,12 @@
 package it.saydigital.vdr.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,13 +15,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import it.saydigital.vdr.model.pojo.PrivilegePojo;
+
 @Entity
 public class Role {
   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
- 
+	@Column(unique=true)
     private String name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
@@ -74,6 +79,19 @@ public class Role {
 	public void setPrivileges(Set<Privilege> privileges) {
 		this.privileges = privileges;
 	}   
+	
+	public String getRoleNameWithoutPrefix() {
+		return this.name.replaceAll("^ROLE_", "");
+	}
+	
+	public List<PrivilegePojo> getPrivilegesAsPojos(){
+		List<PrivilegePojo> pojos = new ArrayList<>();
+		for (Privilege privilege : this.privileges) {
+			PrivilegePojo pojo = privilege.getAsPojo();
+			pojos.add(pojo);
+		}
+		return pojos;
+	}
     
     
 }

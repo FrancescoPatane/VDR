@@ -1,10 +1,12 @@
 package it.saydigital.vdr.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +28,12 @@ import it.saydigital.vdr.async.AsyncService;
 import it.saydigital.vdr.async.task.BackgroundTask;
 import it.saydigital.vdr.async.task.FullDownloadTask;
 import it.saydigital.vdr.model.MarketingEntity;
+import it.saydigital.vdr.model.Privilege;
+import it.saydigital.vdr.model.Role;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.MarketingEntityRepository;
+import it.saydigital.vdr.repository.PrivilegeRepository;
+import it.saydigital.vdr.repository.RoleRepository;
 import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.security.PermissionChecker;
 import it.saydigital.vdr.security.password.InvalidPasswordException;
@@ -40,6 +47,12 @@ public class AsyncController {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PrivilegeRepository privilegeRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private PermissionChecker permChecker;
@@ -86,7 +99,7 @@ public class AsyncController {
 		}
 		return result;
 	}
-	
+
 	@PostMapping("/ajaxPublic/changePswWithToken")
 	public void changePasswordWithToken( @RequestBody Map<String, String> params) {
 		String token = params.get("resetToken");
@@ -107,6 +120,61 @@ public class AsyncController {
 		}
 		return sbuilder.toString();
 
+	}
+
+	@GetMapping("/ajax/admin/system/getPrivilegesSelection")
+	public String getPrivilegesSelectionForRole(@RequestParam("id") long roleId) {
+		StringBuilder selection = new StringBuilder();
+		Optional<Role> optional = roleRepository.findById(roleId);
+		if (optional != null) {
+			Role role = optional.get();
+			List<Privilege> privileges =privilegeRepository.findAll();
+
+			for (Privilege privilege : privileges) {
+				if (!role.getPrivileges().contains(privilege))
+					selection.append("<div class='form-check'><input class='form-check-input' type='checkbox' id='privilege_"+privilege.getId()+"' value='"+privilege.getName()+"'><label class='form-check-label' for='privilege_"+privilege.getId()+"'>"+privilege.getName()+"</label></div>");
+			}
+		}
+		return selection.toString();
+
+	}
+
+	@PostMapping("/ajax/admin/system/addPrivilege")
+	public String addPrivilege(@RequestBody Map<String, Object> params) {
+		String returnList="";
+		long roleId = Long.parseLong((String) params.get("roleId"));
+		List<String> selected = (List<String>)params.get("checkedPrivileges");
+		Optional<Role> optional = roleRepository.findById(roleId);
+		if (optional != null) {
+			Role role = optional.get();
+			for (String privilegeName : selected) {
+				Privilege privilege = privilegeRepository.findByName(privilegeName);
+				role.getPrivileges().add(privilege);
+			}
+			roleRepository.save(role);
+			returnList = writePrivilegesForRole(role);
+		}
+		return returnList;
+	}
+	
+	private String writePrivilegesForRole(Role role) {
+		StringBuilder sb = new StringBuilder();
+		for (Privilege privilege : role.getPrivileges()) {
+			sb.append("<li class='list-group-item' id='privilege_"+privilege.getId()+"'><button type='button' id='delButton' class='btn btn-secondary' onclick='removePrivilege("+privilege.getId()+")'><i class='fas fa-times'></i></button>"+privilege.getName()+"</li>");
+		}
+		return sb.toString();
+	}
+
+	@DeleteMapping("/ajax/admin/system/removePrivilege")
+	public void removePrivilege(@RequestBody Map<String, String> params) {
+		long privilegeId = Long.parseLong(params.get("privilegeId"));
+		long roleId = Long.parseLong(params.get("roleId"));
+		Optional<Role> optional = roleRepository.findById(roleId);
+		if (optional != null) {
+			Role role = optional.get();
+			role.getPrivileges().removeIf(p -> p.getId() == privilegeId);
+			roleRepository.save(role);
+		}
 	}
 
 	private void writeFDTask(StringBuilder sbuilder, FullDownloadTask task) {
