@@ -1,6 +1,7 @@
 package it.saydigital.vdr.security.password;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ public class PasswordUtilities {
 		String token = UUID.randomUUID().toString();
 		return token;
 	}
+	
+	private PasswordPolicy getPasswordPolicyIfPresent() {
+		PasswordPolicy policy = this.policyRepository.findByIsActive(true);
+		return policy;
+	}
 
 	/**
 	 * If there is a password policy active, this method check if the password is valid 
@@ -53,7 +59,7 @@ public class PasswordUtilities {
 	 * @throws InvalidPasswordException
 	 */
 	public void changePsw(String newPsw, User user) throws InvalidPasswordException {
-		PasswordPolicy policy = this.policyRepository.findByIsActive(true);
+		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
 		if (policy != null) {
 			PasswordValidator pswValidator = new PasswordValidator (policy);
 			pswValidator.validate(newPsw);
@@ -64,6 +70,7 @@ public class PasswordUtilities {
 	private void saveNewPassword(String newPsw, User user) {
 		String psw = pswEncoder.encode(newPsw);
 		user.setPassword(psw);
+		user.setPasswordCreationDate(LocalDateTime.now());
 		userRepository.save(user);
 	}
 
@@ -72,6 +79,7 @@ public class PasswordUtilities {
 		User user = resetToken.getUser();
 		String psw = pswEncoder.encode(newPsw);
 		user.setPassword(psw);
+		user.setPasswordCreationDate(LocalDateTime.now());
 		userRepository.save(user);
 		tokenRepository.delete(resetToken);
 	}
@@ -100,6 +108,18 @@ public class PasswordUtilities {
 		}
 		else {
 			return null;
+		}
+	}
+	
+	public boolean isPasswordNotEXpired(User user) {
+		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
+		if (policy != null) {
+			LocalDateTime lastTimePasswordUpdated = user.getPasswordCreationDate();
+			int daysBeforeExpiration = policy.getValidityDays();
+			LocalDateTime dateExpired = lastTimePasswordUpdated.plusDays(daysBeforeExpiration);
+			return LocalDateTime.now().isBefore(dateExpired);
+		}else {
+			return true;
 		}
 	}
 

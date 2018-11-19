@@ -13,13 +13,13 @@ public class PasswordValidator {
 
 	public void validate(String password) throws InvalidPasswordException {
 		
-		if (!this.checkMinLength(password))
+		if (policy.getMinLength() != null && !this.checkMinLength(password))
 			throw new InvalidPasswordException("Password too short");
 		
-		if (!this.checkInlcudesNumbers(password))
+		if (policy.getIncludeNumbers() != null && !this.checkInlcudesNumbers(password))
 			throw new InvalidPasswordException("Password must include at least a number.");
 		
-		if (!this.checkInlcudesUpperCase(password))
+		if (policy.getIncludeUpperCase() != null && !this.checkInlcudesUpperCase(password))
 			throw new InvalidPasswordException("Password must include at least one upper case character.");
 		
 	}

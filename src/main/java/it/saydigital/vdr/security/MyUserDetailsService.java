@@ -21,6 +21,7 @@ import it.saydigital.vdr.model.Role;
 import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.RoleRepository;
 import it.saydigital.vdr.repository.UserRepository;
+import it.saydigital.vdr.security.password.PasswordUtilities;
 
 
 
@@ -34,6 +35,9 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private RoleRepository roleRepository;
     
+    @Autowired
+    private PasswordUtilities pswUtilities;
+    
  
     @Override
     public UserDetails loadUserByUsername(String email)throws UsernameNotFoundException {
@@ -46,9 +50,10 @@ public class MyUserDetailsService implements UserDetailsService {
 //                roleRepository.findByName("ROLE_USER"))));
         	throw new UsernameNotFoundException("Username not found.");
         }
+        //new CredentialExpiredException()
  
         return new org.springframework.security.core.userdetails.User(
-          user.getEmail(), user.getPassword(), user.isEnabled(), true, true, 
+          user.getEmail(), user.getPassword(), user.isEnabled(), true, pswUtilities.isPasswordNotEXpired(user), 
           true, getAuthorities(user.getRoles()));
     }
  

@@ -23,8 +23,8 @@ import it.saydigital.vdr.security.MyAuthenticationSuccessHandler;
 //@EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+//    @Autowired
+//    private AccessDeniedHandler accessDeniedHandler;
     
     @Autowired
     private UserDetailsService userDetailsService;
@@ -70,7 +70,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	
-    	 http.csrf().ignoringAntMatchers("/api/**");
+    	 //http.csrf().ignoringAntMatchers("/api/**");
     	 
 //    	 http
 //         .authorizeRequests()
@@ -82,13 +82,35 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //         .authenticated()
 //         .and()
 //         .httpBasic();
-
+    	
+    	http
+    		.authorizeRequests()
+    		.antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**", "/ajaxPublic/**").permitAll()
+    		.antMatchers("/admin/system/**", "/ajax/admin/system/**").hasAuthority("SYSTEM_ADMINISTRATION")
+            .antMatchers("/admin/vdr/**").hasAnyAuthority("SYSTEM_ADMINISTRATION","VDR_ADMINISTRATION")
+            .antMatchers("/api/**").hasAuthority("USE_WEBSERVICE")
+            .anyRequest().authenticated()
+            .and()
+            .csrf().ignoringAntMatchers("/api/**")
+            .and()
+            .formLogin()
+            .loginPage("/login")
+            .permitAll()
+            .successHandler(this.myAuthenticationSuccessHandler())
+            .and()
+            .logout()
+            .permitAll()
+            .and()
+            .exceptionHandling().accessDeniedPage("/403")//.accessDeniedHandler(accessDeniedHandler)
+            ;
+    	
+    	/*
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**").permitAll()
-                .antMatchers("/ajaxPublic/**").permitAll().anyRequest().permitAll()
-                .antMatchers("/ajax/admin/system/**").hasAuthority("SYSTEM_ADMINISTRATION")
-                .antMatchers("/api/**").permitAll().anyRequest().permitAll()
+                //.antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**").permitAll()
+                //.antMatchers("/ajaxPublic/**").permitAll().anyRequest().permitAll()
+                .antMatchers("/ajax/admin/system/**").hasRole("ADMIN")//.hasAuthority("SYSTEM_ADMINISTRATION")
+                //.antMatchers("/api/**").permitAll().anyRequest().permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("SYSTEM_ADMINISTRATION","VDR_ADMINISTRATION")
                 .antMatchers("/admin/system/**").hasAuthority("SYSTEM_ADMINISTRATION")
                 .anyRequest().authenticated()
@@ -101,8 +123,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-                ;
+                .exceptionHandling().accessDeniedPage("/error/403")//.accessDeniedHandler(accessDeniedHandler)
+                ;*/
     }
 
 

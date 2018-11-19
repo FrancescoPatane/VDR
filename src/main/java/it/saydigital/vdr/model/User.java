@@ -1,5 +1,6 @@
 package it.saydigital.vdr.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class User {
     private String securityQuestion;
     private String securityAnswer;
     private String locale;
-    private Date passwordCreationDate;
+    private LocalDateTime passwordCreationDate;
     
     
     @OneToMany(mappedBy="user", orphanRemoval = true)
@@ -66,7 +67,7 @@ public class User {
 		this.password = password;
 		this.enabled = true;
 		this.roles = new HashSet<>();
-		this.passwordCreationDate = new Date();
+		this.passwordCreationDate = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -149,11 +150,11 @@ public class User {
 		this.locale = locale;
 	}
 
-	public Date getPasswordCreationDate() {
+	public LocalDateTime getPasswordCreationDate() {
 		return passwordCreationDate;
 	}
 
-	public void setPasswordCreationDate(Date passwordCreationDate) {
+	public void setPasswordCreationDate(LocalDateTime passwordCreationDate) {
 		this.passwordCreationDate = passwordCreationDate;
 	}
     
