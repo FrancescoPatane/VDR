@@ -36,6 +36,7 @@ import it.saydigital.vdr.repository.PrivilegeRepository;
 import it.saydigital.vdr.repository.RoleRepository;
 import it.saydigital.vdr.repository.UserRepository;
 import it.saydigital.vdr.security.PermissionChecker;
+import it.saydigital.vdr.security.password.ExpiredPasswordResetTokenException;
 import it.saydigital.vdr.security.password.InvalidPasswordException;
 import it.saydigital.vdr.security.password.PasswordUtilities;
 
@@ -101,10 +102,21 @@ public class AsyncController {
 	}
 
 	@PostMapping("/ajaxPublic/changePswWithToken")
-	public void changePasswordWithToken( @RequestBody Map<String, String> params) {
+	public Map<String, Object> changePasswordWithToken( @RequestBody Map<String, String> params) {
+		Map<String, Object> result = new HashMap<>();
 		String token = params.get("resetToken");
 		String newPsw = params.get("newPsw");
-		pswUtils.changePswByResetToken(newPsw, token);
+		try {
+			pswUtils.changePswByResetToken(newPsw, token);
+			result.put("executed", true);
+		} catch (ExpiredPasswordResetTokenException e) {
+			result.put("executed", false);
+			result.put("message", e.getMessage());
+		} catch (InvalidPasswordException e) {
+			result.put("executed", false);
+			result.put("message", e.getMessage());
+		}
+		return result;
 	}
 
 	@GetMapping("/ajax/checkTasks")

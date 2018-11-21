@@ -33,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //    private MyAuthenticationSuccessHandler MyAuthenticationSuccessHandler;
     
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
     };
     
@@ -85,7 +85,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     	
     	http
     		.authorizeRequests()
-    		.antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/passRecovery3", "/changePassword", "/changeLocale/**", "/ajaxPublic/**").permitAll()
+    		.antMatchers("/", "/home", "/passRecovery1", "/passRecovery2", "/changePassword", "/changeLocale/**", "/ajaxPublic/**").permitAll()
     		.antMatchers("/admin/system/**", "/ajax/admin/system/**").hasAuthority("SYSTEM_ADMINISTRATION")
             .antMatchers("/admin/vdr/**").hasAnyAuthority("SYSTEM_ADMINISTRATION","VDR_ADMINISTRATION")
             .antMatchers("/api/**").hasAuthority("USE_WEBSERVICE")

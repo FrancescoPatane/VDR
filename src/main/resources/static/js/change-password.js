@@ -39,7 +39,7 @@ function fire_ajax_submit() {
 			timeout: 600000,
 			success: function (data) {
 
-
+				if (data.executed){
 				$('#succPsw').show();
 				setTimeout(function() {$('#succPsw').hide()}, 3000);
 				$("#pswButton").prop("disabled", false);
@@ -48,7 +48,11 @@ function fire_ajax_submit() {
 					var baseUrl = $('head base')[0].href;
 					window.location.replace(baseUrl+"login");
 				}, 3000);
-
+				}else{
+					$('#invalidPsw').html(data.message);
+					$('#invalidPsw').show();
+					$("#pswButton").prop("disabled", false);
+				}
 
 			},
 			error: function (e) {

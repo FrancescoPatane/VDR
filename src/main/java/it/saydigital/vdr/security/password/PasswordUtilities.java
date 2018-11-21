@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import it.saydigital.vdr.model.PasswordPolicy;
 import it.saydigital.vdr.model.PasswordResetToken;
@@ -18,7 +19,7 @@ import it.saydigital.vdr.repository.UserRepository;
 public class PasswordUtilities {
 
 	@Autowired
-	private BCryptPasswordEncoder pswEncoder;
+	private PasswordEncoder pswEncoder;
 
 	@Autowired
 	private PasswordResetTokenRepository tokenRepository;
@@ -28,6 +29,13 @@ public class PasswordUtilities {
 
 	@Autowired
 	private UserRepository userRepository;
+
+
+
+	public PasswordEncoder getPswEncoder() {
+		return pswEncoder;
+	}
+
 
 	public String getRandomPassword() {
 		int length = 8;
@@ -42,7 +50,7 @@ public class PasswordUtilities {
 		String token = UUID.randomUUID().toString();
 		return token;
 	}
-	
+
 	private PasswordPolicy getPasswordPolicyIfPresent() {
 		PasswordPolicy policy = this.policyRepository.findByIsActive(true);
 		return policy;
@@ -60,10 +68,8 @@ public class PasswordUtilities {
 	 */
 	public void changePsw(String newPsw, User user) throws InvalidPasswordException {
 		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
-		if (policy != null) {
-			PasswordValidator pswValidator = new PasswordValidator (policy);
-			pswValidator.validate(newPsw);
-		}
+		PasswordValidator pswValidator = new PasswordValidator (policy, pswEncoder, user);
+		pswValidator.validate(newPsw);
 		this.saveNewPassword(newPsw, user);
 	}
 
@@ -74,9 +80,14 @@ public class PasswordUtilities {
 		userRepository.save(user);
 	}
 
-	public void changePswByResetToken(String newPsw, String token) {
+	public void changePswByResetToken(String newPsw, String token) throws ExpiredPasswordResetTokenException, InvalidPasswordException {
 		PasswordResetToken resetToken = tokenRepository.findByToken(token);
+		if (resetToken.getExpirationDate().isBefore(LocalDateTime.now()))
+			throw new ExpiredPasswordResetTokenException("Password reset token expired.");
 		User user = resetToken.getUser();
+		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
+		PasswordValidator pswValidator = new PasswordValidator (policy, pswEncoder, user);
+		pswValidator.validate(newPsw);
 		String psw = pswEncoder.encode(newPsw);
 		user.setPassword(psw);
 		user.setPasswordCreationDate(LocalDateTime.now());
@@ -110,10 +121,10 @@ public class PasswordUtilities {
 			return null;
 		}
 	}
-	
+
 	public boolean isPasswordNotEXpired(User user) {
 		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
-		if (policy != null) {
+		if (policy != null && policy.getExpiration()) {
 			LocalDateTime lastTimePasswordUpdated = user.getPasswordCreationDate();
 			int daysBeforeExpiration = policy.getValidityDays();
 			LocalDateTime dateExpired = lastTimePasswordUpdated.plusDays(daysBeforeExpiration);

@@ -208,49 +208,52 @@ public class DefaultController {
 
 	@GetMapping("/passRecovery1")
 	public String passRecovery1() throws MalformedURLException {
-		return "/forgotPassword";
+		return "/forgot-password";
 	}
 
 	@PostMapping("/passRecovery2")
-	public String passRecovery2(@RequestParam("email") String email, Model uiModel) {
+	public String passRecovery2(HttpServletRequest request, @RequestParam("email") String email, Model uiModel) throws MessagingException {
 		User user = this.getUser(email);
 		if (user == null) {
 			uiModel.addAttribute("missingMail", true);
-			return "/forgotPassword";
-		}else {
-			uiModel.addAttribute("userMail", email);
-			uiModel.addAttribute("question", user.getSecurityQuestion());
-			return "/resetPassword";
-		}
-	}
-
-	@PostMapping("/passRecovery3")
-	public String resetPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) throws MessagingException {
-		User user = this.getUser(email);
-		if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
-			uiModel.addAttribute("wrongAnswer", true);
-			uiModel.addAttribute("userMail", email);
-			return "/resetPassword";
+			return "/forgot-password";
 		}else {
 			String url = this.getBaseUrl(request);
 			String token = pswUtils.getPasswordResetToken(user);
 			String changePasswordUrl = url+"/changePassword?token="+token+"";
 			mailService.sendMailPasswordReset(user, changePasswordUrl);
 			uiModel.addAttribute("successfull", true);
-			return "/resetPassword";
+			return "/reset-password";
 		}
-
-
 	}
 
+//	@PostMapping("/passRecovery3")
+//	public String resetPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) throws MessagingException {
+//		User user = this.getUser(email);
+//		if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
+//			uiModel.addAttribute("wrongAnswer", true);
+//			uiModel.addAttribute("userMail", email);
+//			return "/resetPassword";
+//		}else {
+//			String url = this.getBaseUrl(request);
+//			String token = pswUtils.getPasswordResetToken(user);
+//			String changePasswordUrl = url+"/changePassword?token="+token+"";
+//			mailService.sendMailPasswordReset(user, changePasswordUrl);
+//			uiModel.addAttribute("successfull", true);
+//			return "/resetPassword";
+//		}
+
+
+//	}
+
 	@GetMapping("/changePassword")
-	public String changePassword(@RequestParam("resetToken") String resetToken, Model uimodel) {
+	public String changePassword(@RequestParam("token") String resetToken, Model uimodel) {
 		PasswordResetToken resetTokenObj = pswUtils.getPasswordResetTokenIfValid(resetToken);
 		if (resetTokenObj == null) {
-			return "403";
+			return "/error/403";
 		}else {
 			uimodel.addAttribute("resetToken", resetTokenObj.getToken());
-			return "changePassword";
+			return "change-password";
 		}
 	}
 

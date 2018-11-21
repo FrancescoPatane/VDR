@@ -26,6 +26,8 @@ import it.saydigital.vdr.util.GeneralHelper;
 @Service
 public class MailService {
 	
+	//todo log
+	
 	@Value("${app.mail_from_address}")
 	private String from;
 
