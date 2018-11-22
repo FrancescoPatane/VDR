@@ -15,7 +15,7 @@ public class EnvHandler {
 	private static Environment environmentObject;
 	
 	@PostConstruct //to fill the static field with the autowired field not accessible with static
-	public void initStatiField() {
+	public void initStaticField() {
 		EnvHandler.environmentObject = environment;
 	}
 	

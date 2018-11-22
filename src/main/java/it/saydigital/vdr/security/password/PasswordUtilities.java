@@ -76,7 +76,7 @@ public class PasswordUtilities {
 	private void saveNewPassword(String newPsw, User user) {
 		String psw = pswEncoder.encode(newPsw);
 		user.setPassword(psw);
-		user.setPasswordCreationDate(LocalDateTime.now());
+		user.setPasswordModifiedDate(LocalDateTime.now());
 		userRepository.save(user);
 	}
 
@@ -90,7 +90,7 @@ public class PasswordUtilities {
 		pswValidator.validate(newPsw);
 		String psw = pswEncoder.encode(newPsw);
 		user.setPassword(psw);
-		user.setPasswordCreationDate(LocalDateTime.now());
+		user.setPasswordModifiedDate(LocalDateTime.now());
 		userRepository.save(user);
 		tokenRepository.delete(resetToken);
 	}
@@ -125,7 +125,7 @@ public class PasswordUtilities {
 	public boolean isPasswordNotEXpired(User user) {
 		PasswordPolicy policy = this.getPasswordPolicyIfPresent();
 		if (policy != null && policy.getExpiration()) {
-			LocalDateTime lastTimePasswordUpdated = user.getPasswordCreationDate();
+			LocalDateTime lastTimePasswordUpdated = user.getPasswordModifiedDate();
 			int daysBeforeExpiration = policy.getValidityDays();
 			LocalDateTime dateExpired = lastTimePasswordUpdated.plusDays(daysBeforeExpiration);
 			return LocalDateTime.now().isBefore(dateExpired);

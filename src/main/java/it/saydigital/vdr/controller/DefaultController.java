@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -112,8 +113,13 @@ public class DefaultController {
 		return "redirect:/home";
 	}
 
+	@Autowired
+	private PasswordEncoder pswEncoder;
+	
 	@GetMapping("/login")
 	public String login() {
+		User user = userRepository.findByEmail("mfelici@gmail.com");
+		this.pswEncoder.matches("a", user.getPassword());
 		return "/login";
 	}
 
@@ -129,6 +135,11 @@ public class DefaultController {
 		//Collections.reverse(userEntities);
 		uiModel.addAttribute("entities", userEntities);
 		return "/user";
+	}
+	
+	@GetMapping("/user/changePassword")
+	public String changePassword() {
+		return "/user-change-password";
 	}
 
 	// the name of the entity is passed in the request to not show the ids, 
@@ -227,24 +238,7 @@ public class DefaultController {
 		}
 	}
 
-//	@PostMapping("/passRecovery3")
-//	public String resetPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("answer") String answer, Model uiModel) throws MessagingException {
-//		User user = this.getUser(email);
-//		if (!user.getSecurityAnswer().equalsIgnoreCase(answer.trim())) {
-//			uiModel.addAttribute("wrongAnswer", true);
-//			uiModel.addAttribute("userMail", email);
-//			return "/resetPassword";
-//		}else {
-//			String url = this.getBaseUrl(request);
-//			String token = pswUtils.getPasswordResetToken(user);
-//			String changePasswordUrl = url+"/changePassword?token="+token+"";
-//			mailService.sendMailPasswordReset(user, changePasswordUrl);
-//			uiModel.addAttribute("successfull", true);
-//			return "/resetPassword";
-//		}
 
-
-//	}
 
 	@GetMapping("/changePassword")
 	public String changePassword(@RequestParam("token") String resetToken, Model uimodel) {

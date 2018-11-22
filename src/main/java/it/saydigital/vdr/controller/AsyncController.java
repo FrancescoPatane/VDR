@@ -88,7 +88,7 @@ public class AsyncController {
 	}
 
 	@PostMapping("/ajax/changePsw")
-	public Map<String, Object> changePassword(@Valid @RequestBody String newPsw) {
+	public Map<String, Object> changePassword( @RequestBody String newPsw) {
 		Map<String, Object> result = new HashMap<>();
 		User user = this.getUser(this.getAuthentication().getName());
 		try {

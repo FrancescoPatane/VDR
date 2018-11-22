@@ -7,11 +7,13 @@ import java.util.Locale;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import it.saydigital.vdr.util.EnvHandler;
 
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 public class VdrApplication {
 
 	public static void main(String[] args) {

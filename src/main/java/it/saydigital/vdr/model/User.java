@@ -40,7 +40,7 @@ public class User {
     private String securityQuestion;
     private String securityAnswer;
     private String locale;
-    private LocalDateTime passwordCreationDate;
+    private LocalDateTime passwordModifiedDate;
     
     
     @OneToMany(mappedBy="user", orphanRemoval = true)
@@ -67,7 +67,7 @@ public class User {
 		this.password = password;
 		this.enabled = true;
 		this.roles = new HashSet<>();
-		this.passwordCreationDate = LocalDateTime.now();
+		this.passwordModifiedDate = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -150,12 +150,12 @@ public class User {
 		this.locale = locale;
 	}
 
-	public LocalDateTime getPasswordCreationDate() {
-		return passwordCreationDate;
+	public LocalDateTime getPasswordModifiedDate() {
+		return passwordModifiedDate;
 	}
 
-	public void setPasswordCreationDate(LocalDateTime passwordCreationDate) {
-		this.passwordCreationDate = passwordCreationDate;
+	public void setPasswordModifiedDate(LocalDateTime passwordModifiedDate) {
+		this.passwordModifiedDate = passwordModifiedDate;
 	}
     
     
