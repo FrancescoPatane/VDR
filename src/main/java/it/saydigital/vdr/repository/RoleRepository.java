@@ -16,5 +16,9 @@ public interface RoleRepository extends JpaRepository<Role, Long>{
 	 @Query( value="SELECT r.name FROM role r  WHERE r.id IN (SELECT ur.role_id FROM user_role ur WHERE ur.user_id = ?1)",
 			 nativeQuery = true) 
 	 List<String> findRolesByUserId (Long userId);
+	 
+	 @Query( value="SELECT r.name FROM role r  WHERE r.id NOT IN (SELECT ur.role_id FROM user_role ur WHERE ur.user_id = ?1)",
+			 nativeQuery = true) 
+	 List<String> findRolesNotInUser (Long userId);
 
 }

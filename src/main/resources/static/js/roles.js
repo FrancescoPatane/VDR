@@ -8,6 +8,15 @@ $(document).ready(function () {
 		addPrivileges();
 
 	});
+	
+	$("#rolesForm").submit(function (event) {
+
+		//stop submit the form, we will post it manually.
+		event.preventDefault();
+
+		addRoles();
+
+	});
 
 });
 
@@ -38,31 +47,111 @@ function addPrivileges() {
 			timeout: 600000,
 			success: function (data) {
 				$("#privilegesForRole").html(data);
-				$('#privilegeModal').modal('toggle');
+				$('#selectionModal').modal('toggle');
 			},
 			error: function (e) {
+				alert(e.responseText);
+
+			}
+		});
+}
+
+
+function addRoles() {
+
+	var token = $("input[name='_csrf']").val();
+	var header = "X-CSRF-TOKEN";
+	var checked = $("#rolesForm input:checkbox:checked");
+	var userId = $(".list-group-item.list-group-item-action.active.show")[0].id.split("-")[1];
+	var checkedRoles = [];
+	for (var i = 0; i<checked.length; i++){
+		checkedRoles.push(checked[i].value);
+	}
+	
+	var params = {}
+	params["checkedRoles"] = checkedRoles;
+	params["userId"] = userId;
+
+		$.ajax({
+			type: "POST",
+			beforeSend: function(request) {
+				request.setRequestHeader(header, token);
+			},
+			contentType: "application/json",
+			url: "/ajax/admin/system/addRoleToUser",
+			data: JSON.stringify(params),
+//			dataType: "json",
+			cache: false,
+			timeout: 600000,
+			success: function () {
+				getRoles(userId);
+				$('#selectionModal').modal('toggle');
+			},
+			error: function (e) {
+				alert(e.responseText);
 
 			}
 		});
 }
 
 function getPrivilegesSelection(){
-	//pick id of selected role
-	var id = $(".list-group-item.list-group-item-action.active.show")[0].id;
+	//pick id of selected user
+	var id = $(".list-group-item.list-group-item-action.active.show")[0].id.split("-")[1];
+	//empty modal from previous selection
+	$("#selectionModal .modal-body").html("");
 	$.ajax({
 		type: "GET",
 		contentType: "application/json",
-		url: "/ajax/admin/system/getPrivilegesSelection",
+		url: "/ajax/admin/system/getPrivilegesSelectionForRole",
 		data: {id:id},
-		dataType: "text",
+		dataType: "json",
 		cache: false,
 		timeout: 600000,
 		success: function (data) {
-//			alert(data);
-			$("#privilegeModal .modal-body").html(data);
+			
+		for (var i = 0; i < data.length; i++){
+			var selection = "<div class='form-check'><input class='form-check-input' type='checkbox' id='"+data[i]+"' value='"+data[i]+"'><label class='form-check-label' for='"+data[i]+"'>"+data[i]+"</label></div>"
+
+			$("#selectionModal .modal-body").append(selection);
+		}
+			
 		},
 		error: function (e) {
-			alert(e);
+			alert(e.responseText);
+
+		}
+	});
+	
+	
+}
+
+
+function getRolesSelection(){
+	//pick id of selected user
+	var id = $(".list-group-item.list-group-item-action.active.show")[0].id.split("-")[1];
+	//empty modal from previous selection
+	$("#selectionModal .modal-body").html("");
+	$("#selectionModal .modal-title").html("Select roles for user");
+
+	$.ajax({
+		type: "GET",
+		contentType: "application/json",
+		url: "/ajax/admin/system/getRolesSelectionForUser",
+		data: {id:id},
+		dataType: "json",
+		cache: false,
+		timeout: 600000,
+		success: function (data) {
+			
+		for (var i = 0; i < data.length; i++){
+			var selection = "<div class='form-check'><input class='form-check-input' type='checkbox' id='"+data[i]+"' value='"+data[i]+"'><label class='form-check-label' for='"+data[i]+"'>"+data[i]+"</label></div>"
+
+			$("#selectionModal .modal-body").append(selection);
+		}
+			
+		},
+		error: function (e) {
+			alert(e.responseText);
 
 		}
 	});
@@ -134,20 +223,16 @@ function getRoles(userId){
 		contentType: "application/json",
 		url: "/ajax/admin/system/getRolesByUser",
 		data: {userId:userId},
-//		data: userId,
 		dataType: "json",
 		cache: false,
 		timeout: 600000,
 		success: function (data) {
 			var roleContainer = "#roleContainer"+userId;
-//			var html = "<span><i class='fas fa-times fa-1x' onclick='removeRole('"+ data[0] +"')'></i>"+data[0]+"asdasd</span>"
-//			$("#roleContainer").append(html);
 			var html = "<div class='row'>";
 			for (var i = 0; i<data.length; i++){
 				var id = userId+"-"+data[i];
 				var name = data[i].replace("ROLE_", "");
 				html = html.concat("<span id=\""+id+"\"><i class=\"fas fa-times fa-1x\" onclick=\"removeRole('"+id+"')\"></i>"+name+"</span>");
-//				$("#roleContainer").append(html);
 				if ((i+1) % 4 == 0){
 					html = html.concat("</div><div class='row'>");
 				}

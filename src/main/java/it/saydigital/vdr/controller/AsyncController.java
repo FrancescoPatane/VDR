@@ -142,21 +142,29 @@ public class AsyncController {
 		return roles;
 	}
 
-	@GetMapping("/ajax/admin/system/getPrivilegesSelection")
-	public String getPrivilegesSelectionForRole(@RequestParam("id") long roleId) {
-		StringBuilder selection = new StringBuilder();
-		Optional<Role> optional = roleRepository.findById(roleId);
-		if (optional != null) {
-			Role role = optional.get();
-			List<Privilege> privileges =privilegeRepository.findAll();
-
-			for (Privilege privilege : privileges) {
-				if (!role.getPrivileges().contains(privilege))
-					selection.append("<div class='form-check'><input class='form-check-input' type='checkbox' id='privilege_"+privilege.getId()+"' value='"+privilege.getName()+"'><label class='form-check-label' for='privilege_"+privilege.getId()+"'>"+privilege.getName()+"</label></div>");
-			}
+	@GetMapping("/ajax/admin/system/getPrivilegesSelectionForRole")
+	public List<String> getPrivilegesSelectionForRole(@RequestParam("id") long roleId) {
+		List<String> privileges =privilegeRepository.findPrivilegesNotInRole(roleId);
+		return privileges;
+	}
+	
+	
+	@GetMapping("/ajax/admin/system/getRolesSelectionForUser")
+	public List<String> getRolesSelectionForUser(@RequestParam("id") long userId) {
+		List<String> roles =roleRepository.findRolesNotInUser(userId);
+		return roles;
+	}
+	
+	@PostMapping("/ajax/admin/system/addRoleToUser")
+	public void addRoleToUser(@RequestBody Map<String, Object> params) {
+		long userId = Long.parseLong((String) params.get("userId"));
+		List<String> selected = (List<String>)params.get("checkedRoles");
+		User user = userRepository.findById(userId).get();
+		for (String roleName : selected) {
+			Role role = roleRepository.findByName(roleName);
+			user.getRoles().add(role);
 		}
-		return selection.toString();
-
+		userRepository.save(user);
 	}
 
 	@PostMapping("/ajax/admin/system/addPrivilege")

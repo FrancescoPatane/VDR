@@ -12,5 +12,9 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>{
 	
 	
 	Privilege findByName(String Name);
+	
+	 @Query( value="SELECT p.name FROM privilege p WHERE p.id NOT IN (SELECT privilege_id FROM role_privilege WHERE role_id = ?1)",
+			 nativeQuery = true) 
+	 List<String> findPrivilegesNotInRole (Long roleId);
 
 }

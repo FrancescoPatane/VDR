@@ -7,6 +7,10 @@
 	text-align: center;
 }
 
+.nav-tabs{
+	margin-bottom: 15px;
+}
+
 #delButton {
 	margin-right: 15px;
 }
