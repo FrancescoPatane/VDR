@@ -2,6 +2,7 @@ package it.saydigital.vdr.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +135,13 @@ public class AsyncController {
 
 	}
 
+	@GetMapping("/ajax/admin/system/getRolesByUser")
+	public List<String> getRolesByUser(@RequestParam("userId") long userId) {
+		System.out.println("asdasd");
+		List<String> roles = roleRepository.findRolesByUserId(userId);
+		return roles;
+	}
+
 	@GetMapping("/ajax/admin/system/getPrivilegesSelection")
 	public String getPrivilegesSelectionForRole(@RequestParam("id") long roleId) {
 		StringBuilder selection = new StringBuilder();
@@ -168,7 +176,7 @@ public class AsyncController {
 		}
 		return returnList;
 	}
-	
+
 	private String writePrivilegesForRole(Role role) {
 		StringBuilder sb = new StringBuilder();
 		for (Privilege privilege : role.getPrivileges()) {
@@ -188,6 +196,16 @@ public class AsyncController {
 			roleRepository.save(role);
 		}
 	}
+
+	@DeleteMapping("/ajax/admin/system/removeRole")
+	public void removeRole(@RequestBody Map<String, String> params) {
+		long userId = Long.parseLong(params.get("userId"));
+		String roleName = params.get("roleName");
+		User user = userRepository.findById(userId).get();
+		user.getRoles().removeIf(r -> r.getName().equalsIgnoreCase(roleName));
+		userRepository.save(user);
+	}
+
 
 	private void writeFDTask(StringBuilder sbuilder, FullDownloadTask task) {
 		sbuilder.append("<tr><td>");

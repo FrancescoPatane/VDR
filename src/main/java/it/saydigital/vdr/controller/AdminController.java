@@ -7,12 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import it.saydigital.vdr.model.Privilege;
 import it.saydigital.vdr.model.Role;
+import it.saydigital.vdr.model.User;
 import it.saydigital.vdr.repository.PrivilegeRepository;
 import it.saydigital.vdr.repository.RoleRepository;
+import it.saydigital.vdr.repository.UserRepository;
 
 @Controller
 public class AdminController {
+	
+	 @Autowired
+	 private UserRepository userRepository;
 	
 	 @Autowired
 	 private RoleRepository roleRepository;
@@ -25,11 +31,16 @@ public class AdminController {
 		return "/system-admin";
 	}
 	
-	@GetMapping("/admin/system/roles")
+	@GetMapping("/admin/system/user-roles")
 	public String manageRoles(Model model) {
+		List<Privilege> privileges= privilegeRepository.findAll();
 		List<Role> roles = roleRepository.findAll();
+		List<User> users =userRepository.findAll();
 		model.addAttribute("roles",roles);
-		return "/roles";
+		model.addAttribute("users",users);
+		model.addAttribute("privileges",privileges);
+
+		return "/user-roles";
 	}
 
 }

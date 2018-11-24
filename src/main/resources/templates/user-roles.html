@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta th:name="_csrf" th:content="${_csrf.token}" />
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+	integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+	crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/user-roles.css}" />
+
+<base th:href="@{/}">
+
+<title>Roles</title>
+</head>
+<body>
+
+
+	<div th:replace="fragments/navbar :: navbar"></div>
+
+
+	<br>
+
+	<br>
+
+	<br>
+
+<!-- 	<div id="title"> -->
+<!-- 		<h1>Roles and Privileges</h1> -->
+<!-- 	</div> -->
+<!-- 	<br> -->
+
+<!-- 	<hr> -->
+
+<!-- 	<div class="container-fluid"> -->
+	
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#users" role="tab" aria-controls="home" aria-selected="true">Users</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#roles" role="tab" aria-controls="profile" aria-selected="false">Roles</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#privileges" role="tab" aria-controls="contact" aria-selected="false">Privileges</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="home-tab">
+  
+  
+  <div class="row">
+  <div class="col-3">
+    <div class="list-group list-group-flush" id="list-tab" role="tablist">
+      <a class="list-group-item list-group-item-action" th:each="user : ${users}" th:id="'user-'+${user.id}" data-toggle="list" th:href="'#list-user-'+${user.id}" role="tab" th:text="${user.email}" th:onclick="'getRoles('+${user.id}+')'"></a>
+<!--       <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a> -->
+<!--       <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a> -->
+<!--       <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a> -->
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade" th:each="user : ${users}" th:id="'list-user-'+${user.id}" role="tabpanel" aria-labelledby="list-home-list">
+      <div th:id="'roleContainer'+${user.id}">
+      
+<!--       	<span id='clickableAwesomeFont'><i class="fas fa-times fa-1x" onclick="removeRole()"></i>asdasd</span> -->
+      </div>
+      </div>
+<!--       <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">..sss.</div> -->
+<!--       <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">.ddd..</div> -->
+<!--       <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">.fff..</div> -->
+    </div>
+  </div>
+</div>
+  
+  
+  
+  
+  </div>
+  <div class="tab-pane fade" id="roles" role="tabpanel" aria-labelledby="profile-tab">...</div>
+  <div class="tab-pane fade" id="privileges" role="tabpanel" aria-labelledby="contact-tab">...</div>
+</div>
+	
+	
+	
+	
+<!-- 	</div> -->
+
+
+
+
+	<div th:replace="fragments/footer :: scripts"></div>
+
+	<script type="text/javascript" th:src="@{/js/roles.js}"></script>
+
+
+</body>
+</html>
