@@ -93,14 +93,12 @@ public class DefaultController {
 	@Autowired
 	private PasswordUtilities pswUtils;
 
-
+	@Autowired
+	private PasswordEncoder pswEncoder;
 
 	@GetMapping(value = { "/", "/home" })
 	public String home(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println(LocaleContextHolder.getLocale());
-//		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
-//        localeResolver.setLocale(request, response, Locale.FRANCE);
-//        System.out.println(LocaleContextHolder.getLocale());
+//		System.out.println(pswEncoder.encode("admin"));
 		return "/home";
 	}
 
@@ -113,13 +111,9 @@ public class DefaultController {
 		return "redirect:/home";
 	}
 
-	@Autowired
-	private PasswordEncoder pswEncoder;
 	
 	@GetMapping("/login")
 	public String login() {
-		User user = userRepository.findByEmail("mfelici@gmail.com");
-		this.pswEncoder.matches("a", user.getPassword());
 		return "/login";
 	}
 
